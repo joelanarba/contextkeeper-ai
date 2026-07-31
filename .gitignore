@@ -20,3 +20,7 @@ coverage/
 
 # Source maps
 *.js.map
+
+# AI operating files
+CLAUDE.md
+tasks/
