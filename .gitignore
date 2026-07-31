@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+cdk.out/
+.next/
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local
+
+# Coverage
+coverage/
+
+# IDE
+.DS_Store
+.vscode/settings.json
+
+# Source maps
+*.js.map

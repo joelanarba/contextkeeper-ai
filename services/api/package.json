@@ -1,0 +1,16 @@
+{
+  "name": "@contextkeeper/api",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@contextkeeper/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.147",
+    "typescript": "^5.8.3"
+  }
+}

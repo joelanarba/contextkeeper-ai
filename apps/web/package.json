@@ -1,0 +1,12 @@
+{
+  "name": "@contextkeeper/web",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "echo \"Web app not yet initialized. See Milestone 4.\"",
+    "typecheck": "echo \"Web app typecheck skipped until Milestone 4.\""
+  },
+  "dependencies": {
+    "@contextkeeper/core": "workspace:*"
+  }
+}
