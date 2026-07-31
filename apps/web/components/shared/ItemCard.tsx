@@ -28,25 +28,20 @@ export function ItemCard({ item, onClick }: ItemCardProps) {
           <h3 className="text-sm font-semibold text-foreground line-clamp-2 leading-snug">
             {item.title}
           </h3>
-          {item.summary && (
-            <p className="text-xs text-muted-foreground line-clamp-2">
-              {item.summary}
-            </p>
-          )}
         </div>
       </div>
 
       <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground mt-1">
-        {item.deadline && (
+        {item.dueDate && (
           <div className="flex items-center gap-1.5 text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-100">
             <CalendarIcon className="w-3 h-3" />
-            <span className="font-medium">{formatDate(item.deadline)}</span>
+            <span className="font-medium">{formatDate(item.dueDate)}</span>
           </div>
         )}
-        {item.people?.length > 0 && (
+        {item.person && (
           <div className="flex items-center gap-1.5 bg-zinc-100 px-2 py-0.5 rounded-md">
             <UserIcon className="w-3 h-3" />
-            <span>{item.people.join(', ')}</span>
+            <span>{item.personDisplay || item.person}</span>
           </div>
         )}
         {item.project && (

@@ -15,7 +15,7 @@ export default function PeoplePage() {
     async function load() {
       try {
         const res = await getItems();
-        setItems(res.items.filter(i => i.people && i.people.length > 0));
+        setItems(res.items.filter(i => !!i.person));
       } catch (error) {
         console.error("Failed to load people:", error);
       } finally {
@@ -27,11 +27,10 @@ export default function PeoplePage() {
 
   // Group by person
   const people = items.reduce((acc, item) => {
-    if (!item.people) return acc;
-    item.people.forEach(person => {
-      if (!acc[person]) acc[person] = [];
-      acc[person].push(item);
-    });
+    const personKey = item.personDisplay || item.person;
+    if (!personKey) return acc;
+    if (!acc[personKey]) acc[personKey] = [];
+    acc[personKey].push(item);
     return acc;
   }, {} as Record<string, Item[]>);
 
