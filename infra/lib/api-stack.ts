@@ -10,14 +10,22 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import type { Construct } from 'constructs';
 
+import * as sqs from 'aws-cdk-lib/aws-sqs';
+import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const HANDLERS_DIR = path.join(__dirname, '..', '..', 'services', 'api', 'src', 'handlers');
+
+export interface ApiStackProps extends cdk.StackProps {
+  ingestQueue: sqs.IQueue;
+  table: dynamodb.ITable;
+}
 
 export class ApiStack extends cdk.Stack {
   public readonly userPool: cognito.UserPool;
   public readonly httpApi: apigwv2.HttpApi;
 
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+  constructor(scope: Construct, id: string, props: ApiStackProps) {
     super(scope, id, props);
 
     cdk.Tags.of(this).add('Project', 'ContextKeeper');
@@ -99,6 +107,34 @@ export class ApiStack extends cdk.Stack {
       path: '/health',
       methods: [apigwv2.HttpMethod.GET],
       integration: new apigwv2int.HttpLambdaIntegration('HealthIntegration', healthFn),
+      authorizer: jwtAuthorizer,
+    });
+
+    // --- Create Capture Endpoint ---
+    const createCaptureFn = new NodejsFunction(this, 'CreateCaptureFn', {
+      runtime: lambda.Runtime.NODEJS_22_X,
+      architecture: lambda.Architecture.ARM_64,
+      entry: path.join(HANDLERS_DIR, 'createCapture.ts'),
+      handler: 'handler',
+      memorySize: 512,
+      timeout: cdk.Duration.seconds(10),
+      environment: {
+        TABLE_NAME: props.table.tableName,
+        INGEST_QUEUE_URL: props.ingestQueue.queueUrl,
+      },
+      bundling: {
+        target: 'node22',
+        sourceMap: true,
+      },
+    });
+
+    props.table.grantReadWriteData(createCaptureFn);
+    props.ingestQueue.grantSendMessages(createCaptureFn);
+
+    this.httpApi.addRoutes({
+      path: '/captures',
+      methods: [apigwv2.HttpMethod.POST],
+      integration: new apigwv2int.HttpLambdaIntegration('CreateCaptureIntegration', createCaptureFn),
       authorizer: jwtAuthorizer,
     });
 

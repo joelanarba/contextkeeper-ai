@@ -6,3 +6,5 @@ export * from './types.js';
 export * from './keys.js';
 export * from './errors.js';
 export * from './dates.js';
+export * from './prompts/extraction.js';
+export * from './inference/provider.js';

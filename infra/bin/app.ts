@@ -3,6 +3,7 @@ import * as cdk from 'aws-cdk-lib';
 
 import { ApiStack } from '../lib/api-stack.js';
 import { DataStack } from '../lib/data-stack.js';
+import { PipelineStack } from '../lib/pipeline-stack.js';
 
 const app = new cdk.App();
 
@@ -11,5 +12,15 @@ const env = {
   region: 'us-east-1',
 };
 
-new DataStack(app, 'ContextKeeper-DataStack', { env });
-new ApiStack(app, 'ContextKeeper-ApiStack', { env });
+const dataStack = new DataStack(app, 'ContextKeeper-DataStack', { env });
+
+const pipelineStack = new PipelineStack(app, 'ContextKeeper-PipelineStack', {
+  env,
+  table: dataStack.table,
+});
+
+new ApiStack(app, 'ContextKeeper-ApiStack', {
+  env,
+  table: dataStack.table,
+  ingestQueue: pipelineStack.ingestQueue,
+});
