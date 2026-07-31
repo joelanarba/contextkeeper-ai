@@ -1,0 +1,193 @@
+{
+  "/ContextKeeper-PipelineStack": [
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:17:23)",
+        "...node internals..."
+      ]
+    },
+    {
+      "type": "aws:cdk:warning",
+      "data": "No cross-stack-reference strength configured, defaulting to \"strong\". We recommend you set feature flag \"@aws-cdk/core:defaultCrossStackReferences\" to \"both\", then deploy everywhere, then set it to \"weak\". Alternatively, set it to \"strong\" explicitly to lock in the current producer-protecting behavior. (See: https://github.com/aws/aws-cdk/blob/main/packages/aws-cdk-lib/README.md#reference-strength) [ack: @aws-cdk/core:crossStackReferencesDefaultStrong]",
+      "trace": [
+        "Annotations.addMessage (C:\\dev\\Projects\\contextkeeper-ai\\node_modules\\.pnpm\\aws-cdk-lib@2.262.2_constructs@10.8.0\\node_modules\\aws-cdk-lib\\core\\lib\\annotations.js:1:3506)",
+        "Annotations.addWarningV2 (C:\\dev\\Projects\\contextkeeper-ai\\node_modules\\.pnpm\\aws-cdk-lib@2.262.2_constructs@10.8.0\\node_modules\\aws-cdk-lib\\core\\lib\\annotations.js:1:2194)",
+        "resolveValue (C:\\dev\\Projects\\contextkeeper-ai\\node_modules\\.pnpm\\aws-cdk-lib@2.262.2_constructs@10.8.0\\node_modules\\aws-cdk-lib\\core\\lib\\private\\refs.js:1:6980)",
+        "resolveReferences (C:\\dev\\Projects\\contextkeeper-ai\\node_modules\\.pnpm\\aws-cdk-lib@2.262.2_constructs@10.8.0\\node_modules\\aws-cdk-lib\\core\\lib\\private\\refs.js:1:4848)",
+        "prepareApp (C:\\dev\\Projects\\contextkeeper-ai\\node_modules\\.pnpm\\aws-cdk-lib@2.262.2_constructs@10.8.0\\node_modules\\aws-cdk-lib\\core\\lib\\private\\prepare-app.js:1:1503)",
+        "synthesize (C:\\dev\\Projects\\contextkeeper-ai\\node_modules\\.pnpm\\aws-cdk-lib@2.262.2_constructs@10.8.0\\node_modules\\aws-cdk-lib\\core\\lib\\private\\synthesis.js:1:2625)",
+        "App.synth (C:\\dev\\Projects\\contextkeeper-ai\\node_modules\\.pnpm\\aws-cdk-lib@2.262.2_constructs@10.8.0\\node_modules\\aws-cdk-lib\\core\\lib\\stage.js:1:5061)",
+        "App.synth (C:\\dev\\Projects\\contextkeeper-ai\\node_modules\\.pnpm\\aws-cdk-lib@2.262.2_constructs@10.8.0\\node_modules\\aws-cdk-lib\\core\\lib\\app.js:1:5050)",
+        "process.<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\node_modules\\.pnpm\\aws-cdk-lib@2.262.2_constructs@10.8.0\\node_modules\\aws-cdk-lib\\core\\lib\\app.js:1:3936)",
+        "Object.onceWrapper (node:events:623:26)",
+        "process.emit (node:events:508:28)",
+        "process.emit (C:\\dev\\Projects\\contextkeeper-ai\\node_modules\\.pnpm\\tsx@4.23.1\\node_modules\\tsx\\dist\\suppress-warnings.cjs:1:472)"
+      ]
+    },
+    {
+      "type": "aws:cdk:stack-tags",
+      "data": [
+        {
+          "key": "Project",
+          "value": "ContextKeeper"
+        }
+      ]
+    }
+  ],
+  "/ContextKeeper-PipelineStack/BootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "....pnpm...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ContextKeeper-PipelineStack/CheckBootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CheckBootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "....pnpm...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ContextKeeper-PipelineStack/IngestDLQ/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "IngestDLQA251CA18"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Queue2 in .pnpm...",
+        "new PipelineStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\pipeline-stack.ts:30:17)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:17:23)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-PipelineStack/IngestQueue/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "IngestQueue2280FF4E"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Queue2 in .pnpm...",
+        "new PipelineStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\pipeline-stack.ts:34:24)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:17:23)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-PipelineStack/UnderstandFn/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "UnderstandFn3F5E041A"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in .pnpm...",
+        "new PipelineStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\pipeline-stack.ts:44:26)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:17:23)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-PipelineStack/CDKMetadata/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CDKMetadata"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "....pnpm, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ContextKeeper-PipelineStack/Exports/Output{\"Fn::GetAtt\":[\"IngestQueue2280FF4E\",\"Arn\"]}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsOutputFnGetAttIngestQueue2280FF4EArnFE0694A6"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "....pnpm, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ContextKeeper-PipelineStack/Exports/Output{\"Ref\":\"IngestQueue2280FF4E\"}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsOutputRefIngestQueue2280FF4EF5DFF735"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "....pnpm, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ContextKeeper-PipelineStack/UnderstandFn/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "UnderstandFnServiceRole07B67C1A"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in .pnpm...",
+        "new PipelineStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\pipeline-stack.ts:44:26)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:17:23)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-PipelineStack/UnderstandFn/SqsEventSource:ContextKeeperPipelineStackIngestQueueD2E5D40D/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "UnderstandFnSqsEventSourceContextKeeperPipelineStackIngestQueueD2E5D40D4DCB57DC"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...NodejsFunction.addEventSource in .pnpm...",
+        "new PipelineStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\pipeline-stack.ts:77:18)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:17:23)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-PipelineStack/UnderstandFn/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "UnderstandFnServiceRoleDefaultPolicy09A56985"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...NodejsFunction.addToRolePolicy in .pnpm...",
+        "new PipelineStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\pipeline-stack.ts:63:18)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:17:23)",
+        "...node internals..."
+      ]
+    }
+  ]
+}

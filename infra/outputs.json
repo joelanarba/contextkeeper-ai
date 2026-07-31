@@ -1,0 +1,21 @@
+{
+  "ContextKeeper-DataStack": {
+    "TableName": "ContextKeeperTable",
+    "BucketArn": "arn:aws:s3:::contextkeeper-datastack-rawcapturebucketc2715c24-0o5ks8gvvax7",
+    "BucketName": "contextkeeper-datastack-rawcapturebucketc2715c24-0o5ks8gvvax7",
+    "TableArn": "arn:aws:dynamodb:us-east-1:694069618970:table/ContextKeeperTable",
+    "ExportsOutputRefRawCaptureBucketC2715C24E7FA71CA": "contextkeeper-datastack-rawcapturebucketc2715c24-0o5ks8gvvax7",
+    "ExportsOutputFnGetAttContextKeeperTableA39C47D8ArnE06BF5D1": "arn:aws:dynamodb:us-east-1:694069618970:table/ContextKeeperTable",
+    "ExportsOutputRefContextKeeperTableA39C47D8CCA8D253": "ContextKeeperTable",
+    "ExportsOutputFnGetAttRawCaptureBucketC2715C24Arn8083D83A": "arn:aws:s3:::contextkeeper-datastack-rawcapturebucketc2715c24-0o5ks8gvvax7"
+  },
+  "ContextKeeper-PipelineStack": {
+    "ExportsOutputFnGetAttIngestQueue2280FF4EArnFE0694A6": "arn:aws:sqs:us-east-1:694069618970:ContextKeeper-PipelineStack-IngestQueue2280FF4E-cHcQ5xDqMGqk",
+    "ExportsOutputRefIngestQueue2280FF4EF5DFF735": "https://sqs.us-east-1.amazonaws.com/694069618970/ContextKeeper-PipelineStack-IngestQueue2280FF4E-cHcQ5xDqMGqk"
+  },
+  "ContextKeeper-ApiStack": {
+    "UserPoolClientId": "39kpd8hunnqaajtugqptr0e4qd",
+    "ApiUrl": "https://lpne3t1kb1.execute-api.us-east-1.amazonaws.com",
+    "UserPoolId": "us-east-1_RFRKHFKlZ"
+  }
+}

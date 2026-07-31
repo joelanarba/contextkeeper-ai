@@ -1,0 +1,36 @@
+{
+  "version": "54.0.0",
+  "files": {
+    "9c6736636af107471fdb22f95bedf16eb733db400a2f02fabd55ded9d02d94ca": {
+      "displayName": "UnderstandFn/Code",
+      "source": {
+        "path": "asset.9c6736636af107471fdb22f95bedf16eb733db400a2f02fabd55ded9d02d94ca",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "694069618970-us-east-1-2ed13ab5": {
+          "bucketName": "cdk-hnb659fds-assets-694069618970-us-east-1",
+          "objectKey": "9c6736636af107471fdb22f95bedf16eb733db400a2f02fabd55ded9d02d94ca.zip",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::694069618970:role/cdk-hnb659fds-file-publishing-role-694069618970-us-east-1"
+        }
+      }
+    },
+    "425c779aa3d734232b1e28b9d258c6e9d18f9eac8b5a53be3750f627c767a17e": {
+      "displayName": "ContextKeeper-PipelineStack Template",
+      "source": {
+        "path": "ContextKeeper-PipelineStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "694069618970-us-east-1-8e45c6c4": {
+          "bucketName": "cdk-hnb659fds-assets-694069618970-us-east-1",
+          "objectKey": "425c779aa3d734232b1e28b9d258c6e9d18f9eac8b5a53be3750f627c767a17e.json",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::694069618970:role/cdk-hnb659fds-file-publishing-role-694069618970-us-east-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

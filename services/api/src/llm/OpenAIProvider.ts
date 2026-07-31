@@ -54,7 +54,7 @@ export const OpenAIProvider: LlmProvider = {
       // Extract text from PDF
         if (!pdfParse) {
           const m = await import('pdf-parse');
-          pdfParse = m.default || m;
+          pdfParse = (m as any).default || m;
         }
         const parsed = await pdfParse(buffer);
         const text = parsed.text;
@@ -142,5 +142,31 @@ ${contextString}`;
     });
 
     return completion.choices[0]?.message?.content || 'Sorry, I was unable to generate an answer.';
+  },
+
+  async synthesizeDigest(items: ExtractionItem[], currentDate: string): Promise<string> {
+    const client = await getClient();
+
+    const systemPrompt = `You are ContextKeeper, a personal memory assistant.
+Your job is to write a weekly digest email to the user summarizing their open tasks, follow-ups, and ideas.
+The output MUST be formatted in clean HTML so it renders beautifully in an email client.
+Do NOT include markdown block wrappers like \`\`\`html. Output raw HTML only.
+Use an elegant, professional, and friendly tone. Group by category (e.g. Tasks, Follow-ups, Ideas).
+Highlight any HIGH priority items or overdue items if applicable based on the CURRENT_DATE.`;
+
+    const userContent = `CURRENT_DATE (Africa/Accra): ${currentDate}\n\nItems to summarize:\n${JSON.stringify(items, null, 2)}`;
+
+    const completion = await client.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userContent }
+      ],
+      temperature: 0.3,
+    });
+
+    const content = completion.choices[0]?.message?.content || '';
+    // Strip markdown formatting if the model still outputs it
+    return content.replace(/^```html\s*/i, '').replace(/```\s*$/i, '').trim();
   }
 };

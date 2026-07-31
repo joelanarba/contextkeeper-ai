@@ -1,0 +1,1359 @@
+{
+ "Resources": {
+  "UserPool6BA7E5F2": {
+   "Type": "AWS::Cognito::UserPool",
+   "Properties": {
+    "AccountRecoverySetting": {
+     "RecoveryMechanisms": [
+      {
+       "Name": "verified_phone_number",
+       "Priority": 1
+      },
+      {
+       "Name": "verified_email",
+       "Priority": 2
+      }
+     ]
+    },
+    "AdminCreateUserConfig": {
+     "AllowAdminCreateUserOnly": false
+    },
+    "AutoVerifiedAttributes": [
+     "email"
+    ],
+    "EmailVerificationMessage": "The verification code to your new account is {####}",
+    "EmailVerificationSubject": "Verify your new account",
+    "Policies": {
+     "PasswordPolicy": {
+      "MinimumLength": 12,
+      "RequireLowercase": true,
+      "RequireNumbers": true,
+      "RequireSymbols": false,
+      "RequireUppercase": true
+     }
+    },
+    "SmsVerificationMessage": "The verification code to your new account is {####}",
+    "UserPoolAddOns": {
+     "AdvancedSecurityMode": "AUDIT"
+    },
+    "UserPoolName": "ContextKeeperUserPool",
+    "UserPoolTags": {
+     "Project": "ContextKeeper"
+    },
+    "UsernameAttributes": [
+     "email"
+    ],
+    "VerificationMessageTemplate": {
+     "DefaultEmailOption": "CONFIRM_WITH_CODE",
+     "EmailMessage": "The verification code to your new account is {####}",
+     "EmailSubject": "Verify your new account",
+     "SmsMessage": "The verification code to your new account is {####}"
+    }
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/UserPool/Resource"
+   }
+  },
+  "UserPoolWebClient4C9370B0": {
+   "Type": "AWS::Cognito::UserPoolClient",
+   "Properties": {
+    "AllowedOAuthFlows": [
+     "implicit",
+     "code"
+    ],
+    "AllowedOAuthFlowsUserPoolClient": true,
+    "AllowedOAuthScopes": [
+     "openid",
+     "email",
+     "profile"
+    ],
+    "CallbackURLs": [
+     "http://localhost:3000/"
+    ],
+    "ExplicitAuthFlows": [
+     "ALLOW_USER_SRP_AUTH",
+     "ALLOW_REFRESH_TOKEN_AUTH"
+    ],
+    "LogoutURLs": [
+     "http://localhost:3000/"
+    ],
+    "SupportedIdentityProviders": [
+     "COGNITO"
+    ],
+    "UserPoolId": {
+     "Ref": "UserPool6BA7E5F2"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/UserPool/WebClient/Resource"
+   }
+  },
+  "UserPoolCognitoDomainD6C7F9FA": {
+   "Type": "AWS::Cognito::UserPoolDomain",
+   "Properties": {
+    "Domain": "contextkeeper-694069618970",
+    "UserPoolId": {
+     "Ref": "UserPool6BA7E5F2"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/UserPool/CognitoDomain/Resource"
+   }
+  },
+  "HealthFnServiceRoleA02F5DA7": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "ContextKeeper"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/HealthFn/ServiceRole/Resource"
+   }
+  },
+  "HealthFn0EF18565": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Architectures": [
+     "arm64"
+    ],
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-694069618970-us-east-1",
+     "S3Key": "34101e3d7721d2c050a93872594414e16bbc7977886c22db392f79276a717652.zip"
+    },
+    "Handler": "index.handler",
+    "MemorySize": 512,
+    "Role": {
+     "Fn::GetAtt": [
+      "HealthFnServiceRoleA02F5DA7",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs22.x",
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "ContextKeeper"
+     }
+    ],
+    "Timeout": 10
+   },
+   "DependsOn": [
+    "HealthFnServiceRoleA02F5DA7"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/HealthFn/Resource",
+    "aws:asset:path": "asset.34101e3d7721d2c050a93872594414e16bbc7977886c22db392f79276a717652",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "HttpApiF5A9A8A7": {
+   "Type": "AWS::ApiGatewayV2::Api",
+   "Properties": {
+    "CorsConfiguration": {
+     "AllowHeaders": [
+      "Authorization",
+      "Content-Type"
+     ],
+     "AllowMethods": [
+      "*"
+     ],
+     "AllowOrigins": [
+      "http://localhost:3000"
+     ]
+    },
+    "Name": "ContextKeeperAPI",
+    "ProtocolType": "HTTP",
+    "Tags": {
+     "Project": "ContextKeeper"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/HttpApi/Resource"
+   }
+  },
+  "HttpApiDefaultStage3EEB07D6": {
+   "Type": "AWS::ApiGatewayV2::Stage",
+   "Properties": {
+    "ApiId": {
+     "Ref": "HttpApiF5A9A8A7"
+    },
+    "AutoDeploy": true,
+    "DefaultRouteSettings": {
+     "ThrottlingBurstLimit": 20,
+     "ThrottlingRateLimit": 10
+    },
+    "StageName": "$default",
+    "Tags": {
+     "Project": "ContextKeeper"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/HttpApi/DefaultStage/Resource"
+   }
+  },
+  "HttpApiGEThealthHealthIntegration700E4B25": {
+   "Type": "AWS::ApiGatewayV2::Integration",
+   "Properties": {
+    "ApiId": {
+     "Ref": "HttpApiF5A9A8A7"
+    },
+    "IntegrationType": "AWS_PROXY",
+    "IntegrationUri": {
+     "Fn::GetAtt": [
+      "HealthFn0EF18565",
+      "Arn"
+     ]
+    },
+    "PayloadFormatVersion": "2.0"
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/HttpApi/GET--health/HealthIntegration/Resource"
+   }
+  },
+  "HttpApiGEThealthHealthIntegrationPermissionEC5DEC43": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "HealthFn0EF18565",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-east-1:694069618970:",
+       {
+        "Ref": "HttpApiF5A9A8A7"
+       },
+       "/*/*/health"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/HttpApi/GET--health/HealthIntegration-Permission"
+   }
+  },
+  "HttpApiGEThealthAB1F4856": {
+   "Type": "AWS::ApiGatewayV2::Route",
+   "Properties": {
+    "ApiId": {
+     "Ref": "HttpApiF5A9A8A7"
+    },
+    "AuthorizationType": "JWT",
+    "AuthorizerId": {
+     "Ref": "HttpApiCognitoAuthorizer935FA0F6"
+    },
+    "RouteKey": "GET /health",
+    "Target": {
+     "Fn::Join": [
+      "",
+      [
+       "integrations/",
+       {
+        "Ref": "HttpApiGEThealthHealthIntegration700E4B25"
+       }
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/HttpApi/GET--health/Resource"
+   }
+  },
+  "HttpApiCognitoAuthorizer935FA0F6": {
+   "Type": "AWS::ApiGatewayV2::Authorizer",
+   "Properties": {
+    "ApiId": {
+     "Ref": "HttpApiF5A9A8A7"
+    },
+    "AuthorizerType": "JWT",
+    "IdentitySource": [
+     "$request.header.Authorization"
+    ],
+    "JwtConfiguration": {
+     "Audience": [
+      {
+       "Ref": "UserPoolWebClient4C9370B0"
+      }
+     ],
+     "Issuer": {
+      "Fn::Join": [
+       "",
+       [
+        "https://cognito-idp.us-east-1.amazonaws.com/",
+        {
+         "Ref": "UserPool6BA7E5F2"
+        }
+       ]
+      ]
+     }
+    },
+    "Name": "CognitoAuthorizer"
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/HttpApi/CognitoAuthorizer/Resource"
+   }
+  },
+  "HttpApiPOSTcapturesCreateCaptureIntegration6FD6AB86": {
+   "Type": "AWS::ApiGatewayV2::Integration",
+   "Properties": {
+    "ApiId": {
+     "Ref": "HttpApiF5A9A8A7"
+    },
+    "IntegrationType": "AWS_PROXY",
+    "IntegrationUri": {
+     "Fn::GetAtt": [
+      "CreateCaptureFn1DC0E2B9",
+      "Arn"
+     ]
+    },
+    "PayloadFormatVersion": "2.0"
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/HttpApi/POST--captures/CreateCaptureIntegration/Resource"
+   }
+  },
+  "HttpApiPOSTcapturesCreateCaptureIntegrationPermission17AA89DF": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "CreateCaptureFn1DC0E2B9",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-east-1:694069618970:",
+       {
+        "Ref": "HttpApiF5A9A8A7"
+       },
+       "/*/*/captures"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/HttpApi/POST--captures/CreateCaptureIntegration-Permission"
+   }
+  },
+  "HttpApiPOSTcaptures030230FF": {
+   "Type": "AWS::ApiGatewayV2::Route",
+   "Properties": {
+    "ApiId": {
+     "Ref": "HttpApiF5A9A8A7"
+    },
+    "AuthorizationType": "JWT",
+    "AuthorizerId": {
+     "Ref": "HttpApiCognitoAuthorizer935FA0F6"
+    },
+    "RouteKey": "POST /captures",
+    "Target": {
+     "Fn::Join": [
+      "",
+      [
+       "integrations/",
+       {
+        "Ref": "HttpApiPOSTcapturesCreateCaptureIntegration6FD6AB86"
+       }
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/HttpApi/POST--captures/Resource"
+   }
+  },
+  "HttpApiGETcapturespresignPresignCaptureIntegration0B128901": {
+   "Type": "AWS::ApiGatewayV2::Integration",
+   "Properties": {
+    "ApiId": {
+     "Ref": "HttpApiF5A9A8A7"
+    },
+    "IntegrationType": "AWS_PROXY",
+    "IntegrationUri": {
+     "Fn::GetAtt": [
+      "PresignCaptureFn6D195CBD",
+      "Arn"
+     ]
+    },
+    "PayloadFormatVersion": "2.0"
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/HttpApi/GET--captures--presign/PresignCaptureIntegration/Resource"
+   }
+  },
+  "HttpApiGETcapturespresignPresignCaptureIntegrationPermission68020B0E": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "PresignCaptureFn6D195CBD",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-east-1:694069618970:",
+       {
+        "Ref": "HttpApiF5A9A8A7"
+       },
+       "/*/*/captures/presign"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/HttpApi/GET--captures--presign/PresignCaptureIntegration-Permission"
+   }
+  },
+  "HttpApiGETcapturespresign8EA5255E": {
+   "Type": "AWS::ApiGatewayV2::Route",
+   "Properties": {
+    "ApiId": {
+     "Ref": "HttpApiF5A9A8A7"
+    },
+    "AuthorizationType": "JWT",
+    "AuthorizerId": {
+     "Ref": "HttpApiCognitoAuthorizer935FA0F6"
+    },
+    "RouteKey": "GET /captures/presign",
+    "Target": {
+     "Fn::Join": [
+      "",
+      [
+       "integrations/",
+       {
+        "Ref": "HttpApiGETcapturespresignPresignCaptureIntegration0B128901"
+       }
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/HttpApi/GET--captures--presign/Resource"
+   }
+  },
+  "HttpApiGETitemsListItemsIntegration5A8F618A": {
+   "Type": "AWS::ApiGatewayV2::Integration",
+   "Properties": {
+    "ApiId": {
+     "Ref": "HttpApiF5A9A8A7"
+    },
+    "IntegrationType": "AWS_PROXY",
+    "IntegrationUri": {
+     "Fn::GetAtt": [
+      "ListItemsFnEF179B2F",
+      "Arn"
+     ]
+    },
+    "PayloadFormatVersion": "2.0"
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/HttpApi/GET--items/ListItemsIntegration/Resource"
+   }
+  },
+  "HttpApiGETitemsListItemsIntegrationPermissionCFF5EF0A": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "ListItemsFnEF179B2F",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-east-1:694069618970:",
+       {
+        "Ref": "HttpApiF5A9A8A7"
+       },
+       "/*/*/items"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/HttpApi/GET--items/ListItemsIntegration-Permission"
+   }
+  },
+  "HttpApiGETitems63870120": {
+   "Type": "AWS::ApiGatewayV2::Route",
+   "Properties": {
+    "ApiId": {
+     "Ref": "HttpApiF5A9A8A7"
+    },
+    "AuthorizationType": "JWT",
+    "AuthorizerId": {
+     "Ref": "HttpApiCognitoAuthorizer935FA0F6"
+    },
+    "RouteKey": "GET /items",
+    "Target": {
+     "Fn::Join": [
+      "",
+      [
+       "integrations/",
+       {
+        "Ref": "HttpApiGETitemsListItemsIntegration5A8F618A"
+       }
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/HttpApi/GET--items/Resource"
+   }
+  },
+  "HttpApiPOSTrecallRecallIntegration2E99C39A": {
+   "Type": "AWS::ApiGatewayV2::Integration",
+   "Properties": {
+    "ApiId": {
+     "Ref": "HttpApiF5A9A8A7"
+    },
+    "IntegrationType": "AWS_PROXY",
+    "IntegrationUri": {
+     "Fn::GetAtt": [
+      "RecallFnA140EF35",
+      "Arn"
+     ]
+    },
+    "PayloadFormatVersion": "2.0"
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/HttpApi/POST--recall/RecallIntegration/Resource"
+   }
+  },
+  "HttpApiPOSTrecallRecallIntegrationPermissionBE302214": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "RecallFnA140EF35",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-east-1:694069618970:",
+       {
+        "Ref": "HttpApiF5A9A8A7"
+       },
+       "/*/*/recall"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/HttpApi/POST--recall/RecallIntegration-Permission"
+   }
+  },
+  "HttpApiPOSTrecallD2717401": {
+   "Type": "AWS::ApiGatewayV2::Route",
+   "Properties": {
+    "ApiId": {
+     "Ref": "HttpApiF5A9A8A7"
+    },
+    "AuthorizationType": "JWT",
+    "AuthorizerId": {
+     "Ref": "HttpApiCognitoAuthorizer935FA0F6"
+    },
+    "RouteKey": "POST /recall",
+    "Target": {
+     "Fn::Join": [
+      "",
+      [
+       "integrations/",
+       {
+        "Ref": "HttpApiPOSTrecallRecallIntegration2E99C39A"
+       }
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/HttpApi/POST--recall/Resource"
+   }
+  },
+  "CreateCaptureFnServiceRole00AA3FAB": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "ContextKeeper"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/CreateCaptureFn/ServiceRole/Resource"
+   }
+  },
+  "CreateCaptureFnServiceRoleDefaultPolicy9709AC06": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputFnGetAttContextKeeperTableA39C47D8ArnE06BF5D1"
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputFnGetAttContextKeeperTableA39C47D8ArnE06BF5D1"
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputFnGetAttContextKeeperTableA39C47D8ArnE06BF5D1"
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputFnGetAttContextKeeperTableA39C47D8ArnE06BF5D1"
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "sqs:SendMessage",
+        "sqs:GetQueueAttributes",
+        "sqs:GetQueueUrl"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::ImportValue": "ContextKeeper-PipelineStack:ExportsOutputFnGetAttIngestQueue2280FF4EArnFE0694A6"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CreateCaptureFnServiceRoleDefaultPolicy9709AC06",
+    "Roles": [
+     {
+      "Ref": "CreateCaptureFnServiceRole00AA3FAB"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/CreateCaptureFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "CreateCaptureFn1DC0E2B9": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Architectures": [
+     "arm64"
+    ],
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-694069618970-us-east-1",
+     "S3Key": "b978ac511c875bd1f40347f9028ecc3513191c969210713a6dea8ae32312b474.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "TABLE_NAME": {
+       "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputRefContextKeeperTableA39C47D8CCA8D253"
+      },
+      "INGEST_QUEUE_URL": {
+       "Fn::ImportValue": "ContextKeeper-PipelineStack:ExportsOutputRefIngestQueue2280FF4EF5DFF735"
+      },
+      "BUCKET_NAME": {
+       "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputRefRawCaptureBucketC2715C24E7FA71CA"
+      }
+     }
+    },
+    "Handler": "index.handler",
+    "MemorySize": 512,
+    "Role": {
+     "Fn::GetAtt": [
+      "CreateCaptureFnServiceRole00AA3FAB",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs22.x",
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "ContextKeeper"
+     }
+    ],
+    "Timeout": 10
+   },
+   "DependsOn": [
+    "CreateCaptureFnServiceRoleDefaultPolicy9709AC06",
+    "CreateCaptureFnServiceRole00AA3FAB"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/CreateCaptureFn/Resource",
+    "aws:asset:path": "asset.b978ac511c875bd1f40347f9028ecc3513191c969210713a6dea8ae32312b474",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "PresignCaptureFnServiceRole413D1850": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "ContextKeeper"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/PresignCaptureFn/ServiceRole/Resource"
+   }
+  },
+  "PresignCaptureFnServiceRoleDefaultPolicy8F1D1EF5": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:DeleteObject*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging",
+        "s3:Abort*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputFnGetAttRawCaptureBucketC2715C24Arn8083D83A"
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputFnGetAttRawCaptureBucketC2715C24Arn8083D83A"
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "PresignCaptureFnServiceRoleDefaultPolicy8F1D1EF5",
+    "Roles": [
+     {
+      "Ref": "PresignCaptureFnServiceRole413D1850"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/PresignCaptureFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "PresignCaptureFn6D195CBD": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Architectures": [
+     "arm64"
+    ],
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-694069618970-us-east-1",
+     "S3Key": "335c7e1606e3e1c80426ad7802b8e1f3933f1581d70848018348169a41880969.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "BUCKET_NAME": {
+       "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputRefRawCaptureBucketC2715C24E7FA71CA"
+      }
+     }
+    },
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "PresignCaptureFnServiceRole413D1850",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs22.x",
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "ContextKeeper"
+     }
+    ],
+    "Timeout": 10
+   },
+   "DependsOn": [
+    "PresignCaptureFnServiceRoleDefaultPolicy8F1D1EF5",
+    "PresignCaptureFnServiceRole413D1850"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/PresignCaptureFn/Resource",
+    "aws:asset:path": "asset.335c7e1606e3e1c80426ad7802b8e1f3933f1581d70848018348169a41880969",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "ListItemsFnServiceRole2D2DA3B7": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "ContextKeeper"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/ListItemsFn/ServiceRole/Resource"
+   }
+  },
+  "ListItemsFnServiceRoleDefaultPolicy199FF3FA": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputFnGetAttContextKeeperTableA39C47D8ArnE06BF5D1"
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputFnGetAttContextKeeperTableA39C47D8ArnE06BF5D1"
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputFnGetAttContextKeeperTableA39C47D8ArnE06BF5D1"
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputFnGetAttContextKeeperTableA39C47D8ArnE06BF5D1"
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ListItemsFnServiceRoleDefaultPolicy199FF3FA",
+    "Roles": [
+     {
+      "Ref": "ListItemsFnServiceRole2D2DA3B7"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/ListItemsFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ListItemsFnEF179B2F": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Architectures": [
+     "arm64"
+    ],
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-694069618970-us-east-1",
+     "S3Key": "83eeb6e089068cbadb33c4e18bd70151d8516735662ba4efaa3db085f2f71136.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "TABLE_NAME": {
+       "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputRefContextKeeperTableA39C47D8CCA8D253"
+      }
+     }
+    },
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "ListItemsFnServiceRole2D2DA3B7",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs22.x",
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "ContextKeeper"
+     }
+    ]
+   },
+   "DependsOn": [
+    "ListItemsFnServiceRoleDefaultPolicy199FF3FA",
+    "ListItemsFnServiceRole2D2DA3B7"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/ListItemsFn/Resource",
+    "aws:asset:path": "asset.83eeb6e089068cbadb33c4e18bd70151d8516735662ba4efaa3db085f2f71136",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "RecallFnServiceRole9E97681E": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "ContextKeeper"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/RecallFn/ServiceRole/Resource"
+   }
+  },
+  "RecallFnServiceRoleDefaultPolicyA7A3A2FD": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputFnGetAttContextKeeperTableA39C47D8ArnE06BF5D1"
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputFnGetAttContextKeeperTableA39C47D8ArnE06BF5D1"
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputFnGetAttContextKeeperTableA39C47D8ArnE06BF5D1"
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputFnGetAttContextKeeperTableA39C47D8ArnE06BF5D1"
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputFnGetAttRawCaptureBucketC2715C24Arn8083D83A"
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputFnGetAttRawCaptureBucketC2715C24Arn8083D83A"
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "ssm:GetParameter",
+       "Effect": "Allow",
+       "Resource": "arn:aws:ssm:us-east-1:694069618970:parameter/contextkeeper/openai-api-key"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "RecallFnServiceRoleDefaultPolicyA7A3A2FD",
+    "Roles": [
+     {
+      "Ref": "RecallFnServiceRole9E97681E"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/RecallFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "RecallFnA140EF35": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Architectures": [
+     "arm64"
+    ],
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-694069618970-us-east-1",
+     "S3Key": "4dd239b9f848e5d6806e03e0c870624fc4915d3998d6dc393890735e49e7a7e0.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "TABLE_NAME": {
+       "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputRefContextKeeperTableA39C47D8CCA8D253"
+      },
+      "BUCKET_NAME": {
+       "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputRefRawCaptureBucketC2715C24E7FA71CA"
+      }
+     }
+    },
+    "Handler": "index.handler",
+    "MemorySize": 1024,
+    "Role": {
+     "Fn::GetAtt": [
+      "RecallFnServiceRole9E97681E",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs22.x",
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "ContextKeeper"
+     }
+    ],
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "RecallFnServiceRoleDefaultPolicyA7A3A2FD",
+    "RecallFnServiceRole9E97681E"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/RecallFn/Resource",
+    "aws:asset:path": "asset.4dd239b9f848e5d6806e03e0c870624fc4915d3998d6dc393890735e49e7a7e0",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/11Qy26DQAz8ltw3rgJV74Sqai9tRNQzcmBDzGMXYW9Qivj3aiHQqKd5eDyyHEDwEkCwwZ63WV5tazrBcBTMKoU9p0NmC0NiYfhm3R2srVV8NitfSFyTNvI4ujuLfLUNknkMzM6oamxOOabG5rpk+JzgzZlMyBpF2MCQ2Fr7zQkPtqbs5uXMRsVhisxaGCIPikPYu6zSskfW93oY4rNZW/2y7hpiJmtGhS0VKLrH2zWA4V2kjVryIQ9eHgWL6YKZeCuxTmb2YUQXHS7F/+RfLnJysR396G6qXtU4qulu302m8MMvJ62TUfmfQMlP1+AZdiHsNiUTbTtnhBoNyYy/e6QTxcEBAAA="
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-ApiStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "ApiUrl": {
+   "Value": {
+    "Fn::GetAtt": [
+     "HttpApiF5A9A8A7",
+     "ApiEndpoint"
+    ]
+   }
+  },
+  "UserPoolId": {
+   "Value": {
+    "Ref": "UserPool6BA7E5F2"
+   }
+  },
+  "UserPoolClientId": {
+   "Value": {
+    "Ref": "UserPoolWebClient4C9370B0"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

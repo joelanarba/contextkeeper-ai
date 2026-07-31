@@ -6,6 +6,9 @@ import { NodejsFunction, OutputFormat } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { SqsEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as events from 'aws-cdk-lib/aws-events';
+import * as targets from 'aws-cdk-lib/aws-events-targets';
+import * as ses from 'aws-cdk-lib/aws-ses';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { Construct } from 'constructs';
@@ -79,5 +82,56 @@ export class PipelineStack extends cdk.Stack {
         batchSize: 1,
       })
     );
+
+    // 5. Weekly Digest Lambda
+    const digestFn = new NodejsFunction(this, 'DigestFn', {
+      runtime: lambda.Runtime.NODEJS_22_X,
+      architecture: lambda.Architecture.ARM_64,
+      entry: path.join(HANDLERS_DIR, 'digest.ts'),
+      handler: 'handler',
+      memorySize: 1024,
+      timeout: cdk.Duration.seconds(60),
+      environment: {
+        TABLE_NAME: props.table.tableName,
+        SENDER_EMAIL: 'anarbajoel@gmail.com', // As specified by user
+      },
+      bundling: {
+        target: 'node22',
+        sourceMap: true,
+        format: OutputFormat?.ESM ?? ('esm' as OutputFormat),
+      },
+    });
+
+    // Grant DynamoDB read, SES send, and SSM GetParameter
+    props.table.grantReadData(digestFn);
+    digestFn.addToRolePolicy(
+      new iam.PolicyStatement({
+        actions: ['ses:SendEmail', 'ses:SendRawEmail'],
+        resources: ['*'], // In production, restrict to verified identity ARN
+      })
+    );
+    digestFn.addToRolePolicy(
+      new iam.PolicyStatement({
+        actions: ['ssm:GetParameter'],
+        resources: [
+          `arn:aws:ssm:${this.region}:${this.account}:parameter/contextkeeper/openai-api-key`,
+        ],
+      })
+    );
+
+    // Verify Sender Identity
+    new ses.EmailIdentity(this, 'DigestSenderIdentity', {
+      identity: ses.Identity.email('anarbajoel@gmail.com'),
+    });
+
+    // 6. EventBridge Schedule (Cron) - e.g., Every Friday at 5 PM UTC
+    const rule = new events.Rule(this, 'WeeklyDigestRule', {
+      schedule: events.Schedule.cron({
+        minute: '0',
+        hour: '17',
+        weekDay: 'FRI',
+      }),
+    });
+    rule.addTarget(new targets.LambdaFunction(digestFn));
   }
 }

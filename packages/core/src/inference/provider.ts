@@ -17,4 +17,9 @@ export interface LlmProvider {
    * Answers a question using the provided context captures.
    */
   answerQuestion(question: string, contextCaptures: Capture[], currentDate: string): Promise<string>;
+
+  /**
+   * Synthesize a weekly digest email from a list of open items.
+   */
+  synthesizeDigest(items: ExtractionItem[], currentDate: string): Promise<string>;
 }
