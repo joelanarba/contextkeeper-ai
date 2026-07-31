@@ -1,0 +1,316 @@
+{
+ "Resources": {
+  "ContextKeeperTableA39C47D8": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "pk",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "sk",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "gsi1pk",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "gsi1sk",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "gsi2pk",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "gsi2sk",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "GlobalSecondaryIndexes": [
+     {
+      "IndexName": "GSI1",
+      "KeySchema": [
+       {
+        "AttributeName": "gsi1pk",
+        "KeyType": "HASH"
+       },
+       {
+        "AttributeName": "gsi1sk",
+        "KeyType": "RANGE"
+       }
+      ],
+      "Projection": {
+       "ProjectionType": "ALL"
+      }
+     },
+     {
+      "IndexName": "GSI2",
+      "KeySchema": [
+       {
+        "AttributeName": "gsi2pk",
+        "KeyType": "HASH"
+       },
+       {
+        "AttributeName": "gsi2sk",
+        "KeyType": "RANGE"
+       }
+      ],
+      "Projection": {
+       "ProjectionType": "ALL"
+      }
+     }
+    ],
+    "KeySchema": [
+     {
+      "AttributeName": "pk",
+      "KeyType": "HASH"
+     },
+     {
+      "AttributeName": "sk",
+      "KeyType": "RANGE"
+     }
+    ],
+    "PointInTimeRecoverySpecification": {
+     "PointInTimeRecoveryEnabled": true
+    },
+    "TableName": "ContextKeeperTable",
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "ContextKeeper"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-DataStack/ContextKeeperTable/Resource"
+   }
+  },
+  "RawCaptureBucketC2715C24": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketEncryption": {
+     "ServerSideEncryptionConfiguration": [
+      {
+       "ServerSideEncryptionByDefault": {
+        "SSEAlgorithm": "AES256"
+       }
+      }
+     ]
+    },
+    "CorsConfiguration": {
+     "CorsRules": [
+      {
+       "AllowedHeaders": [
+        "*"
+       ],
+       "AllowedMethods": [
+        "PUT",
+        "GET"
+       ],
+       "AllowedOrigins": [
+        "*"
+       ],
+       "MaxAge": 3000
+      }
+     ]
+    },
+    "LifecycleConfiguration": {
+     "Rules": [
+      {
+       "Id": "IntelligentTiering30Days",
+       "Status": "Enabled",
+       "Transitions": [
+        {
+         "StorageClass": "INTELLIGENT_TIERING",
+         "TransitionInDays": 30
+        }
+       ]
+      }
+     ]
+    },
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    },
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "ContextKeeper"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-DataStack/RawCaptureBucket/Resource"
+   }
+  },
+  "RawCaptureBucketPolicyA61A1572": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "RawCaptureBucketC2715C24"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "s3:*",
+       "Condition": {
+        "Bool": {
+         "aws:SecureTransport": "false"
+        }
+       },
+       "Effect": "Deny",
+       "Principal": {
+        "AWS": "*"
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "RawCaptureBucketC2715C24",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "RawCaptureBucketC2715C24",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-DataStack/RawCaptureBucket/Policy/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/0WMSw7CIBRF19I5PFPauABdgKY6N/xMKBSaPrBpCHtvLCaOzrlncBmwMwPW8BWpVJY6IyA/IpeW8BVfWW2eT0EJyE8unCbXtz+kEOwgX5K0On7jzyruwRm5/XPdpZBBY0iLPG5uKc4pFuKD0jDi6cN6aDtomxGNoUvy0UwahsodLpj8qqcAAAA="
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-DataStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "TableName": {
+   "Value": {
+    "Ref": "ContextKeeperTableA39C47D8"
+   }
+  },
+  "TableArn": {
+   "Value": {
+    "Fn::GetAtt": [
+     "ContextKeeperTableA39C47D8",
+     "Arn"
+    ]
+   }
+  },
+  "BucketName": {
+   "Value": {
+    "Ref": "RawCaptureBucketC2715C24"
+   }
+  },
+  "BucketArn": {
+   "Value": {
+    "Fn::GetAtt": [
+     "RawCaptureBucketC2715C24",
+     "Arn"
+    ]
+   }
+  },
+  "ExportsOutputFnGetAttContextKeeperTableA39C47D8ArnE06BF5D1": {
+   "Value": {
+    "Fn::GetAtt": [
+     "ContextKeeperTableA39C47D8",
+     "Arn"
+    ]
+   },
+   "Export": {
+    "Name": "ContextKeeper-DataStack:ExportsOutputFnGetAttContextKeeperTableA39C47D8ArnE06BF5D1"
+   }
+  },
+  "ExportsOutputFnGetAttRawCaptureBucketC2715C24Arn8083D83A": {
+   "Value": {
+    "Fn::GetAtt": [
+     "RawCaptureBucketC2715C24",
+     "Arn"
+    ]
+   },
+   "Export": {
+    "Name": "ContextKeeper-DataStack:ExportsOutputFnGetAttRawCaptureBucketC2715C24Arn8083D83A"
+   }
+  },
+  "ExportsOutputRefContextKeeperTableA39C47D8CCA8D253": {
+   "Value": {
+    "Ref": "ContextKeeperTableA39C47D8"
+   },
+   "Export": {
+    "Name": "ContextKeeper-DataStack:ExportsOutputRefContextKeeperTableA39C47D8CCA8D253"
+   }
+  },
+  "ExportsOutputRefRawCaptureBucketC2715C24E7FA71CA": {
+   "Value": {
+    "Ref": "RawCaptureBucketC2715C24"
+   },
+   "Export": {
+    "Name": "ContextKeeper-DataStack:ExportsOutputRefRawCaptureBucketC2715C24E7FA71CA"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

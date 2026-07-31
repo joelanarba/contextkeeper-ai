@@ -1,0 +1,36 @@
+{
+  "version": "54.0.0",
+  "files": {
+    "d67cb6c98cca39f4dcbbfb545fff8c5a9a2f86780293abbd1b121fcfb001ff23": {
+      "displayName": "UnderstandFn/Code",
+      "source": {
+        "path": "C:\\dev\\Projects\\contextkeeper-ai",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "694069618970-us-east-1-aba88d8f": {
+          "bucketName": "cdk-hnb659fds-assets-694069618970-us-east-1",
+          "objectKey": "d67cb6c98cca39f4dcbbfb545fff8c5a9a2f86780293abbd1b121fcfb001ff23.zip",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::694069618970:role/cdk-hnb659fds-file-publishing-role-694069618970-us-east-1"
+        }
+      }
+    },
+    "a2163a650fe4781e9d16b510d196aaf9501e99ed66f22aa537c8a8a839c7b707": {
+      "displayName": "ContextKeeper-PipelineStack Template",
+      "source": {
+        "path": "ContextKeeper-PipelineStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "694069618970-us-east-1-6de7bf9b": {
+          "bucketName": "cdk-hnb659fds-assets-694069618970-us-east-1",
+          "objectKey": "a2163a650fe4781e9d16b510d196aaf9501e99ed66f22aa537c8a8a839c7b707.json",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::694069618970:role/cdk-hnb659fds-file-publishing-role-694069618970-us-east-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

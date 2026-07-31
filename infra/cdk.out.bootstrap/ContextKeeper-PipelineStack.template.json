@@ -1,0 +1,342 @@
+{
+ "Resources": {
+  "IngestDLQA251CA18": {
+   "Type": "AWS::SQS::Queue",
+   "Properties": {
+    "MessageRetentionPeriod": 1209600,
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "ContextKeeper"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-PipelineStack/IngestDLQ/Resource"
+   }
+  },
+  "IngestQueue2280FF4E": {
+   "Type": "AWS::SQS::Queue",
+   "Properties": {
+    "MessageRetentionPeriod": 1209600,
+    "RedrivePolicy": {
+     "deadLetterTargetArn": {
+      "Fn::GetAtt": [
+       "IngestDLQA251CA18",
+       "Arn"
+      ]
+     },
+     "maxReceiveCount": 3
+    },
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "ContextKeeper"
+     }
+    ],
+    "VisibilityTimeout": 360
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-PipelineStack/IngestQueue/Resource"
+   }
+  },
+  "UnderstandFnServiceRole07B67C1A": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "ContextKeeper"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-PipelineStack/UnderstandFn/ServiceRole/Resource"
+   }
+  },
+  "UnderstandFnServiceRoleDefaultPolicy09A56985": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "ssm:GetParameter",
+       "Effect": "Allow",
+       "Resource": "arn:aws:ssm:us-east-1:694069618970:parameter/contextkeeper/openai-api-key"
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputFnGetAttContextKeeperTableA39C47D8ArnE06BF5D1"
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputFnGetAttContextKeeperTableA39C47D8ArnE06BF5D1"
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputFnGetAttContextKeeperTableA39C47D8ArnE06BF5D1"
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputFnGetAttContextKeeperTableA39C47D8ArnE06BF5D1"
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputFnGetAttRawCaptureBucketC2715C24Arn8083D83A"
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputFnGetAttRawCaptureBucketC2715C24Arn8083D83A"
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "sqs:ReceiveMessage",
+        "sqs:ChangeMessageVisibility",
+        "sqs:GetQueueUrl",
+        "sqs:DeleteMessage",
+        "sqs:GetQueueAttributes"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "IngestQueue2280FF4E",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "UnderstandFnServiceRoleDefaultPolicy09A56985",
+    "Roles": [
+     {
+      "Ref": "UnderstandFnServiceRole07B67C1A"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-PipelineStack/UnderstandFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "UnderstandFn3F5E041A": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Architectures": [
+     "arm64"
+    ],
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-694069618970-us-east-1",
+     "S3Key": "d67cb6c98cca39f4dcbbfb545fff8c5a9a2f86780293abbd1b121fcfb001ff23.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "TABLE_NAME": {
+       "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputRefContextKeeperTableA39C47D8CCA8D253"
+      },
+      "BUCKET_NAME": {
+       "Fn::ImportValue": "ContextKeeper-DataStack:ExportsOutputRefRawCaptureBucketC2715C24E7FA71CA"
+      }
+     }
+    },
+    "Handler": "index.handler",
+    "MemorySize": 1024,
+    "Role": {
+     "Fn::GetAtt": [
+      "UnderstandFnServiceRole07B67C1A",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs22.x",
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "ContextKeeper"
+     }
+    ],
+    "Timeout": 60
+   },
+   "DependsOn": [
+    "UnderstandFnServiceRoleDefaultPolicy09A56985",
+    "UnderstandFnServiceRole07B67C1A"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-PipelineStack/UnderstandFn/Resource",
+    "aws:asset:path": "C:\\dev\\Projects\\contextkeeper-ai",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "UnderstandFnSqsEventSourceContextKeeperPipelineStackIngestQueueD2E5D40D4DCB57DC": {
+   "Type": "AWS::Lambda::EventSourceMapping",
+   "Properties": {
+    "BatchSize": 1,
+    "EventSourceArn": {
+     "Fn::GetAtt": [
+      "IngestQueue2280FF4E",
+      "Arn"
+     ]
+    },
+    "FunctionName": {
+     "Ref": "UnderstandFn3F5E041A"
+    },
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "ContextKeeper"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-PipelineStack/UnderstandFn/SqsEventSource:ContextKeeperPipelineStackIngestQueueD2E5D40D/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/2WOywrCMBBFv8V9OmIq7lV0p2j7AWWajpI+EnWSioT+uySKG1fn3gtzGAlyJUHO8MmZarqs1zWE0qHqBD65CnxnCGdPnsT2YlKYRI9D3WBlbEMtwzFh741y2hqhcYBQ2D4dJJ5sr9Ur1k+aBOcVMpNjWEcIzmHjVUdug0xfPYTtxfysu5GMK61/KDrg7abNNfr+12kSSVk6vMYq4pPQ8nyUS1jksJi1rHX28MbpgaD48A3zetzlBgEAAA=="
+   },
+   "Metadata": {
+    "aws:cdk:path": "ContextKeeper-PipelineStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "ExportsOutputFnGetAttIngestQueue2280FF4EArnFE0694A6": {
+   "Value": {
+    "Fn::GetAtt": [
+     "IngestQueue2280FF4E",
+     "Arn"
+    ]
+   },
+   "Export": {
+    "Name": "ContextKeeper-PipelineStack:ExportsOutputFnGetAttIngestQueue2280FF4EArnFE0694A6"
+   }
+  },
+  "ExportsOutputRefIngestQueue2280FF4EF5DFF735": {
+   "Value": {
+    "Ref": "IngestQueue2280FF4E"
+   },
+   "Export": {
+    "Name": "ContextKeeper-PipelineStack:ExportsOutputRefIngestQueue2280FF4EF5DFF735"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

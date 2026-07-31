@@ -7,4 +7,14 @@ export interface LlmProvider {
    * @param currentDate The current date in the user's timezone (Africa/Accra) for relative date resolution.
    */
   extractItems(capture: Capture, currentDate: string): Promise<ExtractionItem[]>;
+
+  /**
+   * Generates a vector embedding for a given text.
+   */
+  generateEmbedding(text: string): Promise<number[]>;
+
+  /**
+   * Answers a question using the provided context captures.
+   */
+  answerQuestion(question: string, contextCaptures: Capture[], currentDate: string): Promise<string>;
 }

@@ -138,13 +138,13 @@ export const repo = {
           sk: makeCaptureSK(captureCreatedAt, captureId),
         },
         UpdateExpression: 'SET #status = :ready, updatedAt = :updatedAt',
-        ConditionExpression: '#status = :uploaded', // Idempotency check
+        ConditionExpression: '#status = :understanding', // Idempotency check
         ExpressionAttributeNames: {
           '#status': 'status',
         },
         ExpressionAttributeValues: {
           ':ready': 'READY',
-          ':uploaded': 'UPLOADED',
+          ':understanding': 'UNDERSTANDING',
           ':updatedAt': now,
         },
       }
@@ -181,6 +181,38 @@ export const repo = {
         TransactItems: transactItems,
       })
     );
+  },
+
+  async updateCaptureEmbedding(userId: string, createdAt: string, captureId: string, embedding: number[]): Promise<void> {
+    await docClient.send(
+      new UpdateCommand({
+        TableName: TABLE_NAME,
+        Key: {
+          pk: makeUserPK(userId),
+          sk: makeCaptureSK(createdAt, captureId),
+        },
+        UpdateExpression: 'SET embedding = :embedding, updatedAt = :updatedAt',
+        ExpressionAttributeValues: {
+          ':embedding': embedding,
+          ':updatedAt': new Date().toISOString(),
+        },
+      })
+    );
+  },
+
+  async listAllCaptures(userId: string): Promise<Capture[]> {
+    const pk = makeUserPK(userId);
+    const command = new QueryCommand({
+      TableName: TABLE_NAME,
+      KeyConditionExpression: 'pk = :pk AND begins_with(sk, :skPrefix)',
+      ExpressionAttributeValues: {
+        ':pk': pk,
+        ':skPrefix': 'CAPTURE#',
+      },
+    });
+
+    const result = await docClient.send(command);
+    return (result.Items || []) as Capture[];
   },
 
   async listItems(userId: string): Promise<Item[]> {

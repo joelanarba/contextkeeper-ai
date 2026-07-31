@@ -38,6 +38,7 @@ export default function RootLayout({
                 <div style={layoutStyles.navLinks}>
                   <NavLink href="/">Capture</NavLink>
                   <NavLink href="/inbox">Inbox</NavLink>
+                  <NavLink href="/recall">Recall</NavLink>
                 </div>
 
                 <div style={{ marginTop: 'auto' }}>

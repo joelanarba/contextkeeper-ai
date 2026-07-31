@@ -1,0 +1,628 @@
+{
+  "/ContextKeeper-ApiStack": [
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:23:1)",
+        "...node internals..."
+      ]
+    },
+    {
+      "type": "aws:cdk:stack-tags",
+      "data": [
+        {
+          "key": "Project",
+          "value": "ContextKeeper"
+        }
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/ApiUrl": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiUrl"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:172:5)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:23:1)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/UserPoolId": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "UserPoolId"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:173:5)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:23:1)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/UserPoolClientId": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "UserPoolClientId"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:174:5)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:23:1)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/BootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "....pnpm...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/CheckBootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CheckBootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "....pnpm...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/UserPool/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "UserPool6BA7E5F2"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new UserPool2 in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:38:21)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:23:1)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/HealthFn/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HealthFn0EF18565"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:78:22)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:23:1)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/HttpApi/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiF5A9A8A7"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new HttpApi2 in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:92:20)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:23:1)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/CreateCaptureFn/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CreateCaptureFn1DC0E2B9"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:116:29)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:23:1)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/PresignCaptureFn/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PresignCaptureFn6D195CBD"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:144:30)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:23:1)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/ListItemsFn/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ListItemsFnEF179B2F"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:176:25)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:23:1)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/RecallFn/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "RecallFnA140EF35"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:196:22)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:23:1)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/CDKMetadata/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CDKMetadata"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "....pnpm, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/UserPool/WebClient/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "UserPoolWebClient4C9370B0"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addClient in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:58:42)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:23:1)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/UserPool/CognitoDomain/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "UserPoolCognitoDomainD6C7F9FA"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.addDomain in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:71:19)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:23:1)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/HealthFn/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HealthFnServiceRoleA02F5DA7"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:78:22)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:23:1)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/HttpApi/DefaultStage/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiDefaultStage3EEB07D6"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new HttpApi2 in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:92:20)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:23:1)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/HttpApi/GET--health/HealthIntegration-Permission": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiGEThealthHealthIntegrationPermissionEC5DEC43"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\dev\\Projects\\contextkeeper-ai\\node_modules\\.pnpm\\aws-cdk-lib@2.262.2_constructs@10.8.0\\node_modules\\aws-cdk-lib\\aws-apigatewayv2\\lib\\http\\api.js:1:96 in .pnpm...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:108:18)"
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/HttpApi/GET--health/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiGEThealthAB1F4856"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\dev\\Projects\\contextkeeper-ai\\node_modules\\.pnpm\\aws-cdk-lib@2.262.2_constructs@10.8.0\\node_modules\\aws-cdk-lib\\aws-apigatewayv2\\lib\\http\\api.js:1:96 in .pnpm...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:108:18)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:23:1)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/HttpApi/CognitoAuthorizer/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiCognitoAuthorizer935FA0F6"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\dev\\Projects\\contextkeeper-ai\\node_modules\\.pnpm\\aws-cdk-lib@2.262.2_constructs@10.8.0\\node_modules\\aws-cdk-lib\\aws-apigatewayv2\\lib\\http\\api.js:1:96 in .pnpm...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:108:18)"
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/HttpApi/POST--captures/CreateCaptureIntegration-Permission": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiPOSTcapturesCreateCaptureIntegrationPermission17AA89DF"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\dev\\Projects\\contextkeeper-ai\\node_modules\\.pnpm\\aws-cdk-lib@2.262.2_constructs@10.8.0\\node_modules\\aws-cdk-lib\\aws-apigatewayv2\\lib\\http\\api.js:1:96 in .pnpm...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:137:18)"
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/HttpApi/POST--captures/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiPOSTcaptures030230FF"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\dev\\Projects\\contextkeeper-ai\\node_modules\\.pnpm\\aws-cdk-lib@2.262.2_constructs@10.8.0\\node_modules\\aws-cdk-lib\\aws-apigatewayv2\\lib\\http\\api.js:1:96 in .pnpm...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:137:18)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:23:1)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/HttpApi/GET--captures--presign/PresignCaptureIntegration-Permission": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiGETcapturespresignPresignCaptureIntegrationPermission68020B0E"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\dev\\Projects\\contextkeeper-ai\\node_modules\\.pnpm\\aws-cdk-lib@2.262.2_constructs@10.8.0\\node_modules\\aws-cdk-lib\\aws-apigatewayv2\\lib\\http\\api.js:1:96 in .pnpm...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:156:18)"
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/HttpApi/GET--captures--presign/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiGETcapturespresign8EA5255E"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\dev\\Projects\\contextkeeper-ai\\node_modules\\.pnpm\\aws-cdk-lib@2.262.2_constructs@10.8.0\\node_modules\\aws-cdk-lib\\aws-apigatewayv2\\lib\\http\\api.js:1:96 in .pnpm...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:156:18)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:23:1)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/HttpApi/GET--items/ListItemsIntegration-Permission": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiGETitemsListItemsIntegrationPermissionCFF5EF0A"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\dev\\Projects\\contextkeeper-ai\\node_modules\\.pnpm\\aws-cdk-lib@2.262.2_constructs@10.8.0\\node_modules\\aws-cdk-lib\\aws-apigatewayv2\\lib\\http\\api.js:1:96 in .pnpm...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:188:18)"
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/HttpApi/GET--items/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiGETitems63870120"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\dev\\Projects\\contextkeeper-ai\\node_modules\\.pnpm\\aws-cdk-lib@2.262.2_constructs@10.8.0\\node_modules\\aws-cdk-lib\\aws-apigatewayv2\\lib\\http\\api.js:1:96 in .pnpm...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:188:18)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:23:1)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/HttpApi/POST--recall/RecallIntegration-Permission": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiPOSTrecallRecallIntegrationPermissionBE302214"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\dev\\Projects\\contextkeeper-ai\\node_modules\\.pnpm\\aws-cdk-lib@2.262.2_constructs@10.8.0\\node_modules\\aws-cdk-lib\\aws-apigatewayv2\\lib\\http\\api.js:1:96 in .pnpm...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:223:18)"
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/HttpApi/POST--recall/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiPOSTrecallD2717401"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\dev\\Projects\\contextkeeper-ai\\node_modules\\.pnpm\\aws-cdk-lib@2.262.2_constructs@10.8.0\\node_modules\\aws-cdk-lib\\aws-apigatewayv2\\lib\\http\\api.js:1:96 in .pnpm...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:223:18)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:23:1)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/CreateCaptureFn/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CreateCaptureFnServiceRole00AA3FAB"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:116:29)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:23:1)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/PresignCaptureFn/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PresignCaptureFnServiceRole413D1850"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:144:30)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:23:1)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/ListItemsFn/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ListItemsFnServiceRole2D2DA3B7"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:176:25)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:23:1)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/RecallFn/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "RecallFnServiceRole9E97681E"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:196:22)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:23:1)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/HttpApi/GET--health/HealthIntegration/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiGEThealthHealthIntegration700E4B25"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\dev\\Projects\\contextkeeper-ai\\node_modules\\.pnpm\\aws-cdk-lib@2.262.2_constructs@10.8.0\\node_modules\\aws-cdk-lib\\aws-apigatewayv2\\lib\\http\\api.js:1:96 in .pnpm...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:108:18)"
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/HttpApi/POST--captures/CreateCaptureIntegration/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiPOSTcapturesCreateCaptureIntegration6FD6AB86"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\dev\\Projects\\contextkeeper-ai\\node_modules\\.pnpm\\aws-cdk-lib@2.262.2_constructs@10.8.0\\node_modules\\aws-cdk-lib\\aws-apigatewayv2\\lib\\http\\api.js:1:96 in .pnpm...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:137:18)"
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/HttpApi/GET--captures--presign/PresignCaptureIntegration/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiGETcapturespresignPresignCaptureIntegration0B128901"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\dev\\Projects\\contextkeeper-ai\\node_modules\\.pnpm\\aws-cdk-lib@2.262.2_constructs@10.8.0\\node_modules\\aws-cdk-lib\\aws-apigatewayv2\\lib\\http\\api.js:1:96 in .pnpm...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:156:18)"
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/HttpApi/GET--items/ListItemsIntegration/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiGETitemsListItemsIntegration5A8F618A"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\dev\\Projects\\contextkeeper-ai\\node_modules\\.pnpm\\aws-cdk-lib@2.262.2_constructs@10.8.0\\node_modules\\aws-cdk-lib\\aws-apigatewayv2\\lib\\http\\api.js:1:96 in .pnpm...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:188:18)"
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/HttpApi/POST--recall/RecallIntegration/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiPOSTrecallRecallIntegration2E99C39A"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\dev\\Projects\\contextkeeper-ai\\node_modules\\.pnpm\\aws-cdk-lib@2.262.2_constructs@10.8.0\\node_modules\\aws-cdk-lib\\aws-apigatewayv2\\lib\\http\\api.js:1:96 in .pnpm...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in .pnpm...",
+        "new ApiStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\api-stack.ts:223:18)"
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/CreateCaptureFn/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CreateCaptureFnServiceRoleDefaultPolicy9709AC06"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "....pnpm...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/PresignCaptureFn/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PresignCaptureFnServiceRoleDefaultPolicy8F1D1EF5"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "....pnpm...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/ListItemsFn/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ListItemsFnServiceRoleDefaultPolicy199FF3FA"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "....pnpm...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ContextKeeper-ApiStack/RecallFn/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "RecallFnServiceRoleDefaultPolicyA7A3A2FD"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "....pnpm...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ]
+}

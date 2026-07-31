@@ -7,7 +7,7 @@ import * as apigwv2auth from 'aws-cdk-lib/aws-apigatewayv2-authorizers';
 import * as apigwv2int from 'aws-cdk-lib/aws-apigatewayv2-integrations';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
-import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
+import { NodejsFunction, OutputFormat } from 'aws-cdk-lib/aws-lambda-nodejs';
 import type { Construct } from 'constructs';
 
 import * as sqs from 'aws-cdk-lib/aws-sqs';
@@ -176,7 +176,7 @@ export class ApiStack extends cdk.Stack {
     const listItemsFn = new NodejsFunction(this, 'ListItemsFn', {
       runtime: lambda.Runtime.NODEJS_22_X,
       architecture: lambda.Architecture.ARM_64,
-      entry: path.join(__dirname, '../../../services/api/src/handlers/listItems.ts'),
+      entry: path.join(HANDLERS_DIR, 'listItems.ts'),
       handler: 'handler',
       environment: {
         TABLE_NAME: props.table.tableName,
@@ -189,6 +189,41 @@ export class ApiStack extends cdk.Stack {
       path: '/items',
       methods: [apigwv2.HttpMethod.GET],
       integration: listItemsIntegration,
+      authorizer: jwtAuthorizer,
+    });
+
+    // Recall Q&A Endpoint
+    const recallFn = new NodejsFunction(this, 'RecallFn', {
+      runtime: lambda.Runtime.NODEJS_22_X,
+      architecture: lambda.Architecture.ARM_64,
+      entry: path.join(HANDLERS_DIR, 'recall.ts'),
+      handler: 'handler',
+      memorySize: 1024,
+      timeout: cdk.Duration.seconds(30),
+      environment: {
+        TABLE_NAME: props.table.tableName,
+        BUCKET_NAME: props.bucket.bucketName,
+      },
+      bundling: {
+        target: 'node22',
+        sourceMap: true,
+        format: OutputFormat?.ESM ?? ('esm' as OutputFormat),
+      },
+    });
+
+    props.table.grantReadData(recallFn);
+    props.bucket.grantRead(recallFn); // if it needs to read raw files
+
+    // Grant SSM parameter access for OpenAI API Key
+    recallFn.addToRolePolicy(new cdk.aws_iam.PolicyStatement({
+      actions: ['ssm:GetParameter'],
+      resources: [`arn:aws:ssm:${this.region}:${this.account}:parameter/contextkeeper/openai-api-key`],
+    }));
+
+    this.httpApi.addRoutes({
+      path: '/recall',
+      methods: [apigwv2.HttpMethod.POST],
+      integration: new apigwv2int.HttpLambdaIntegration('RecallIntegration', recallFn),
       authorizer: jwtAuthorizer,
     });
   }

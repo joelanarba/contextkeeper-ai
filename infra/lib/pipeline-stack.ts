@@ -2,7 +2,7 @@ import * as cdk from 'aws-cdk-lib';
 import * as sqs from 'aws-cdk-lib/aws-sqs';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as iam from 'aws-cdk-lib/aws-iam';
-import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
+import { NodejsFunction, OutputFormat } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { SqsEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as s3 from 'aws-cdk-lib/aws-s3';
@@ -55,6 +55,7 @@ export class PipelineStack extends cdk.Stack {
       bundling: {
         target: 'node22',
         sourceMap: true,
+        format: OutputFormat?.ESM ?? ('esm' as OutputFormat),
       },
     });
 

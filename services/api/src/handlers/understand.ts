@@ -68,6 +68,16 @@ export const handler = async (event: SQSEvent): Promise<void> => {
 
       // Save to DynamoDB transactionally and mark capture READY
       await repo.saveExtractedItems(userId, createdAt, captureId, itemsToSave);
+
+      // Generate embedding and save it
+      try {
+        const textToEmbed = capture.rawText || JSON.stringify(extracted);
+        const embedding = await OpenAIProvider.generateEmbedding(textToEmbed);
+        await repo.updateCaptureEmbedding(userId, createdAt, captureId, embedding);
+      } catch (embErr) {
+        // We log the error but don't fail the whole pipeline if embedding fails
+        console.error(`Failed to generate embedding for capture ${captureId}:`, embErr);
+      }
       
       console.log(JSON.stringify({
         level: 'INFO',

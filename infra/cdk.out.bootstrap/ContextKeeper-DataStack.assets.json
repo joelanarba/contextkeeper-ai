@@ -1,0 +1,21 @@
+{
+  "version": "54.0.0",
+  "files": {
+    "3a9ab8270491bdfdc8eb143bac99c535354879a40d9e601e3df27819a5da505f": {
+      "displayName": "ContextKeeper-DataStack Template",
+      "source": {
+        "path": "ContextKeeper-DataStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "694069618970-us-east-1-87a62a4d": {
+          "bucketName": "cdk-hnb659fds-assets-694069618970-us-east-1",
+          "objectKey": "3a9ab8270491bdfdc8eb143bac99c535354879a40d9e601e3df27819a5da505f.json",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::694069618970:role/cdk-hnb659fds-file-publishing-role-694069618970-us-east-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

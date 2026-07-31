@@ -1,0 +1,219 @@
+{
+  "/ContextKeeper-DataStack": [
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:15:19)",
+        "...node internals..."
+      ]
+    },
+    {
+      "type": "aws:cdk:stack-tags",
+      "data": [
+        {
+          "key": "Project",
+          "value": "ContextKeeper"
+        }
+      ]
+    }
+  ],
+  "/ContextKeeper-DataStack/ContextKeeperTable": [
+    {
+      "type": "aws:cdk:hasPhysicalName",
+      "data": {
+        "Ref": "ContextKeeperTableA39C47D8"
+      }
+    }
+  ],
+  "/ContextKeeper-DataStack/TableName": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TableName"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new DataStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\data-stack.ts:78:5)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:15:19)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-DataStack/TableArn": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TableArn"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new DataStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\data-stack.ts:79:5)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:15:19)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-DataStack/BucketName": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BucketName"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new DataStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\data-stack.ts:80:5)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:15:19)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-DataStack/BucketArn": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BucketArn"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new DataStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\data-stack.ts:81:5)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:15:19)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-DataStack/BootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "....pnpm...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ContextKeeper-DataStack/CheckBootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CheckBootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "....pnpm...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ContextKeeper-DataStack/ContextKeeperTable/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ContextKeeperTableA39C47D8"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Table2 in .pnpm...",
+        "new DataStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\data-stack.ts:17:18)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:15:19)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-DataStack/RawCaptureBucket/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "RawCaptureBucketC2715C24"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Bucket2 in .pnpm...",
+        "new DataStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\data-stack.ts:51:19)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:15:19)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/ContextKeeper-DataStack/CDKMetadata/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CDKMetadata"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "....pnpm, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ContextKeeper-DataStack/Exports/Output{\"Fn::GetAtt\":[\"ContextKeeperTableA39C47D8\",\"Arn\"]}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsOutputFnGetAttContextKeeperTableA39C47D8ArnE06BF5D1"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "....pnpm, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ContextKeeper-DataStack/Exports/Output{\"Fn::GetAtt\":[\"RawCaptureBucketC2715C24\",\"Arn\"]}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsOutputFnGetAttRawCaptureBucketC2715C24Arn8083D83A"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "....pnpm, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ContextKeeper-DataStack/Exports/Output{\"Ref\":\"ContextKeeperTableA39C47D8\"}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsOutputRefContextKeeperTableA39C47D8CCA8D253"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "....pnpm, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ContextKeeper-DataStack/Exports/Output{\"Ref\":\"RawCaptureBucketC2715C24\"}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsOutputRefRawCaptureBucketC2715C24E7FA71CA"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "....pnpm, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/ContextKeeper-DataStack/RawCaptureBucket/Policy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "RawCaptureBucketPolicyA61A1572"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Bucket2 in .pnpm...",
+        "new DataStack (C:\\dev\\Projects\\contextkeeper-ai\\infra\\lib\\data-stack.ts:51:19)",
+        "<anonymous> (C:\\dev\\Projects\\contextkeeper-ai\\infra\\bin\\app.ts:15:19)"
+      ]
+    }
+  ]
+}

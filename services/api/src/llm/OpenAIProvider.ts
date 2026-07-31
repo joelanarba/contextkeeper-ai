@@ -4,10 +4,9 @@ import { OpenAI } from 'openai';
 import { zodResponseFormat } from 'openai/helpers/zod';
 import { ExtractionResponseSchema, type LlmProvider, type ExtractionItem, getExtractionUserPrompt, SYSTEM_PROMPT } from '@contextkeeper/core';
 import type { Capture } from '@contextkeeper/core';
-import { createRequire } from 'node:module';
 
-const require = createRequire(import.meta.url);
-const pdfParse = require('pdf-parse');
+// We will load pdf-parse dynamically to avoid ESM/CJS bundling issues
+let pdfParse: any = null;
 
 const ssm = new SSMClient({});
 const s3 = new S3Client({});
@@ -53,8 +52,12 @@ export const OpenAIProvider: LlmProvider = {
       const buffer = Buffer.from(await s3Res.Body.transformToByteArray());
       
       // Extract text from PDF
-      const pdfData = await pdfParse(buffer);
-      const text = pdfData.text;
+        if (!pdfParse) {
+          const m = await import('pdf-parse');
+          pdfParse = m.default || m;
+        }
+        const parsed = await pdfParse(buffer);
+        const text = parsed.text;
       
       messages.push({ role: 'user', content: getExtractionUserPrompt(`[PDF CONTENTS]\n${text}`, currentDate) });
       
@@ -95,5 +98,49 @@ export const OpenAIProvider: LlmProvider = {
     }
 
     return parsed.items;
+  },
+
+  async generateEmbedding(text: string): Promise<number[]> {
+    const client = await getClient();
+    const response = await client.embeddings.create({
+      model: 'text-embedding-3-small',
+      input: text,
+      encoding_format: 'float',
+    });
+    const data = response.data[0];
+    if (!data || !data.embedding) throw new Error('Failed to generate embedding');
+    return data.embedding;
+  },
+
+  async answerQuestion(question: string, contextCaptures: Capture[], currentDate: string): Promise<string> {
+    const client = await getClient();
+
+    // Construct context string from captures
+    const contextLines = contextCaptures.map(c => {
+      const type = c.type;
+      const date = new Date(c.createdAt).toLocaleDateString('en-CA', { timeZone: 'Africa/Accra' });
+      return `[Capture ID: ${c.id}] (Type: ${type}, Date: ${date}):\n${c.rawText || '(Media capture with no raw text)'}`;
+    });
+    const contextString = contextLines.join('\n\n');
+
+    const systemPrompt = `You are ContextKeeper, a personal memory assistant.
+The user is asking a question about their past notes, tasks, ideas, and captured images/documents.
+Use the provided Context Captures to answer the question.
+If the answer is not in the context, say you don't know based on the provided context.
+Whenever you assert a fact or reference a specific note, you MUST cite the Capture ID in brackets, e.g. [Capture ID: 1234...].
+
+Context Captures:
+${contextString}`;
+
+    const completion = await client.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: `CURRENT_DATE (Africa/Accra): ${currentDate}\n\nQuestion: ${question}` }
+      ],
+      temperature: 0.3,
+    });
+
+    return completion.choices[0]?.message?.content || 'Sorry, I was unable to generate an answer.';
   }
 };
