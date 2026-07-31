@@ -119,10 +119,7 @@ export class PipelineStack extends cdk.Stack {
       })
     );
 
-    // Verify Sender Identity
-    new ses.EmailIdentity(this, 'DigestSenderIdentity', {
-      identity: ses.Identity.email('anarbajoel@gmail.com'),
-    });
+    // Verify Sender Identity (OMITTED: Identity already exists in AWS account)
 
     // 6. EventBridge Schedule (Cron) - e.g., Every Friday at 5 PM UTC
     const rule = new events.Rule(this, 'WeeklyDigestRule', {
