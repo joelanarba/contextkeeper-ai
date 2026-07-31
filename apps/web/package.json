@@ -12,11 +12,22 @@
   "dependencies": {
     "@aws-amplify/ui-react": "^6.3.0",
     "@contextkeeper/core": "workspace:*",
+    "@hello-pangea/dnd": "^18.0.1",
+    "@hookform/resolvers": "^5.5.7",
     "aws-amplify": "^6.10.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
+    "framer-motion": "^12.43.0",
+    "lucide-react": "^1.28.0",
     "next": "^15.0.0",
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106",
-    "react-markdown": "^10.1.0"
+    "react-hook-form": "^7.83.0",
+    "react-markdown": "^10.1.0",
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^3.6.0",
+    "zod": "^3.24.4"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.20",
