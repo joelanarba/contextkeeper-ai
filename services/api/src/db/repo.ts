@@ -1,5 +1,5 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, PutCommand, UpdateCommand, GetCommand, TransactWriteCommand } from '@aws-sdk/lib-dynamodb';
+import { DynamoDBDocumentClient, PutCommand, UpdateCommand, GetCommand, TransactWriteCommand, QueryCommand } from '@aws-sdk/lib-dynamodb';
 import {
   makeUserPK,
   makeCaptureSK,
@@ -98,7 +98,8 @@ export const repo = {
 
   async saveExtractedItems(userId: string, captureCreatedAt: string, captureId: string, items: Item[]): Promise<void> {
     const now = new Date().toISOString();
-    const transactItems: unknown[] = [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const transactItems: any[] = [];
 
     // 1. Update capture status to READY
     transactItems.push({
@@ -152,5 +153,31 @@ export const repo = {
         TransactItems: transactItems,
       })
     );
+  },
+
+  async listItems(userId: string): Promise<Item[]> {
+    const pk = makeUserPK(userId);
+    const command = new QueryCommand({
+      TableName: TABLE_NAME,
+      KeyConditionExpression: 'pk = :pk AND begins_with(sk, :skPrefix)',
+      ExpressionAttributeValues: {
+        ':pk': pk,
+        ':skPrefix': 'ITEM#',
+      },
+    });
+
+    const result = await docClient.send(command);
+    
+    // Map database items back to Item interface
+    return (result.Items || []).map(item => ({
+      id: item.id,
+      type: item.itemType,
+      title: item.title,
+      person: item.person,
+      dueDate: item.dueDate,
+      project: item.project,
+      priority: item.priority,
+      status: item.status,
+    })) as Item[];
   }
 };

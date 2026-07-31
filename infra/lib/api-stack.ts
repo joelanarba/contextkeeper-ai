@@ -150,5 +150,25 @@ export class ApiStack extends cdk.Stack {
     new cdk.CfnOutput(this, 'ApiUrl', { value: this.httpApi.apiEndpoint });
     new cdk.CfnOutput(this, 'UserPoolId', { value: this.userPool.userPoolId });
     new cdk.CfnOutput(this, 'UserPoolClientId', { value: userPoolClient.userPoolClientId });
+    // List Items Lambda
+    const listItemsFn = new NodejsFunction(this, 'ListItemsFn', {
+      runtime: lambda.Runtime.NODEJS_22_X,
+      architecture: lambda.Architecture.ARM_64,
+      entry: path.join(__dirname, '../../../services/api/src/handlers/listItems.ts'),
+      handler: 'handler',
+      environment: {
+        TABLE_NAME: props.table.tableName,
+      },
+    });
+    props.table.grantReadData(listItemsFn);
+
+    const listItemsIntegration = new apigwv2int.HttpLambdaIntegration('ListItemsIntegration', listItemsFn);
+    this.httpApi.addRoutes({
+      path: '/items',
+      methods: [apigwv2.HttpMethod.GET],
+      integration: listItemsIntegration,
+      authorizer: jwtAuthorizer,
+    });
   }
 }
+
