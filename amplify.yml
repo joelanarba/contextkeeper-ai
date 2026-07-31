@@ -9,10 +9,9 @@ applications:
             - pnpm install --no-frozen-lockfile --shamefully-hoist
         build:
           commands:
-            - pnpm --filter @contextkeeper/web build
-            - mkdir -p .next/node_modules
-            - cp -r "../../node_modules/"* .next/node_modules/ 2>/dev/null || true
-            - cp -r "node_modules/"* .next/node_modules/ 2>/dev/null || true
+            - pnpm run build
+            - cp -r -L node_modules .next/ 2>/dev/null || true
+            - cp -r -L ../../node_modules .next/ 2>/dev/null || true
       artifacts:
         baseDirectory: .next
         files:
