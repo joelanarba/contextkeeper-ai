@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import type { Item } from "@contextkeeper/core";
 import { CheckSquare, Lightbulb, StickyNote, Calendar, Folder } from "lucide-react";
 
-export function TypeBadge({ type }: { type: Item['type'] }) {
+export function TypeBadge({ type }: { type: Item['type'] | undefined | null }) {
   const config = {
     TASK: { icon: CheckSquare, color: "text-blue-600 bg-blue-50 border-blue-200" },
     IDEA: { icon: Lightbulb, color: "text-amber-600 bg-amber-50 border-amber-200" },
@@ -13,7 +13,7 @@ export function TypeBadge({ type }: { type: Item['type'] }) {
     PROJECT: { icon: Folder, color: "text-zinc-600 bg-zinc-100 border-zinc-200" },
   };
 
-  const { icon: Icon, color } = config[type] || config.NOTE;
+  const { icon: Icon, color } = (type && config[type]) ? config[type] : config.NOTE;
 
   return (
     <span className={cn(
@@ -21,7 +21,7 @@ export function TypeBadge({ type }: { type: Item['type'] }) {
       color
     )}>
       <Icon className="w-3 h-3" />
-      <span className="capitalize">{type.replace('_', ' ').toLowerCase()}</span>
+      <span className="capitalize">{type ? type.replace('_', ' ').toLowerCase() : 'note'}</span>
     </span>
   );
 }

@@ -3,8 +3,10 @@
 import { cn } from "@/lib/utils";
 import type { Item } from "@contextkeeper/core";
 
-export function StatusBadge({ status }: { status: Item['status'] }) {
-  const statusColors = {
+export function StatusBadge({ status }: { status: Item['status'] | undefined | null }) {
+  if (!status) return null;
+
+  const statusColors: Record<string, string> = {
     OPEN: "bg-blue-50 text-blue-700 border-blue-200",
     COMPLETE: "bg-green-50 text-green-700 border-green-200",
   };
