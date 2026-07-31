@@ -17,10 +17,12 @@ const dataStack = new DataStack(app, 'ContextKeeper-DataStack', { env });
 const pipelineStack = new PipelineStack(app, 'ContextKeeper-PipelineStack', {
   env,
   table: dataStack.table,
+  bucket: dataStack.bucket,
 });
 
 new ApiStack(app, 'ContextKeeper-ApiStack', {
   env,
   table: dataStack.table,
   ingestQueue: pipelineStack.ingestQueue,
+  bucket: dataStack.bucket,
 });

@@ -54,6 +54,34 @@ export const repo = {
     return captureId;
   },
 
+  async createMediaCapture(userId: string, type: 'IMAGE' | 'PDF' | 'AUDIO', s3Key: string, nowIso: string): Promise<string> {
+    const captureId = crypto.randomUUID();
+    
+    const capture: Capture = {
+      id: captureId,
+      userId,
+      type,
+      status: 'UPLOADED',
+      s3Key,
+      createdAt: nowIso,
+      updatedAt: nowIso,
+      schemaVersion: 1,
+    };
+
+    await docClient.send(
+      new PutCommand({
+        TableName: TABLE_NAME,
+        Item: {
+          pk: makeUserPK(userId),
+          sk: makeCaptureSK(nowIso, captureId),
+          ...capture,
+        },
+      })
+    );
+
+    return captureId;
+  },
+
   async getCapture(userId: string, createdAt: string, captureId: string): Promise<Capture | null> {
     const res = await docClient.send(
       new GetCommand({

@@ -5,6 +5,7 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { SqsEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
+import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { Construct } from 'constructs';
@@ -14,6 +15,7 @@ const HANDLERS_DIR = path.join(__dirname, '..', '..', 'services', 'api', 'src', 
 
 export interface PipelineStackProps extends cdk.StackProps {
   table: dynamodb.ITable;
+  bucket: s3.IBucket;
 }
 
 export class PipelineStack extends cdk.Stack {
@@ -48,6 +50,7 @@ export class PipelineStack extends cdk.Stack {
       timeout: cdk.Duration.seconds(60),
       environment: {
         TABLE_NAME: props.table.tableName,
+        BUCKET_NAME: props.bucket.bucketName,
       },
       bundling: {
         target: 'node22',
@@ -65,8 +68,9 @@ export class PipelineStack extends cdk.Stack {
       })
     );
 
-    // Grant DynamoDB permissions
+    // 4. Permissions
     props.table.grantReadWriteData(understandFn);
+    props.bucket.grantRead(understandFn);
 
     // Add SQS Trigger (batchSize 1 for easier error isolation in MVP)
     understandFn.addEventSource(

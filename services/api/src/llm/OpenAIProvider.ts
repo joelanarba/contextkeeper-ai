@@ -1,10 +1,18 @@
 import { SSMClient, GetParameterCommand } from '@aws-sdk/client-ssm';
+import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 import { OpenAI } from 'openai';
 import { zodResponseFormat } from 'openai/helpers/zod';
 import { ExtractionResponseSchema, type LlmProvider, type ExtractionItem, getExtractionUserPrompt, SYSTEM_PROMPT } from '@contextkeeper/core';
+import type { Capture } from '@contextkeeper/core';
+import { createRequire } from 'node:module';
+
+const require = createRequire(import.meta.url);
+const pdfParse = require('pdf-parse');
 
 const ssm = new SSMClient({});
+const s3 = new S3Client({});
 let openAiClient: OpenAI | null = null;
+const BUCKET_NAME = process.env.BUCKET_NAME;
 
 async function getClient(): Promise<OpenAI> {
   if (openAiClient) return openAiClient;
@@ -23,16 +31,60 @@ async function getClient(): Promise<OpenAI> {
 }
 
 export const OpenAIProvider: LlmProvider = {
-  async extractItems(rawText: string, currentDate: string): Promise<ExtractionItem[]> {
+  async extractItems(capture: Capture, currentDate: string): Promise<ExtractionItem[]> {
     const client = await getClient();
-    const userPrompt = getExtractionUserPrompt(rawText, currentDate);
+    
+    // Determine the user prompt and messages array based on media type
+    let messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
+      { role: 'system', content: SYSTEM_PROMPT }
+    ];
+
+    if (capture.type === 'TEXT') {
+      messages.push({ role: 'user', content: getExtractionUserPrompt(capture.rawText || '', currentDate) });
+    } else if (capture.type === 'PDF' && capture.s3Key) {
+      if (!BUCKET_NAME) throw new Error('BUCKET_NAME is required for media processing');
+      
+      const s3Res = await s3.send(new GetObjectCommand({
+        Bucket: BUCKET_NAME,
+        Key: capture.s3Key,
+      }));
+      
+      if (!s3Res.Body) throw new Error('S3 object body is empty');
+      const buffer = Buffer.from(await s3Res.Body.transformToByteArray());
+      
+      // Extract text from PDF
+      const pdfData = await pdfParse(buffer);
+      const text = pdfData.text;
+      
+      messages.push({ role: 'user', content: getExtractionUserPrompt(`[PDF CONTENTS]\n${text}`, currentDate) });
+      
+    } else if (capture.type === 'IMAGE' && capture.s3Key) {
+      if (!BUCKET_NAME) throw new Error('BUCKET_NAME is required for media processing');
+      
+      const s3Res = await s3.send(new GetObjectCommand({
+        Bucket: BUCKET_NAME,
+        Key: capture.s3Key,
+      }));
+      
+      if (!s3Res.Body) throw new Error('S3 object body is empty');
+      const buffer = Buffer.from(await s3Res.Body.transformToByteArray());
+      const base64Image = buffer.toString('base64');
+      const mimeType = capture.s3Key.endsWith('.png') ? 'image/png' : 'image/jpeg';
+      
+      messages.push({
+        role: 'user',
+        content: [
+          { type: 'text', text: `CURRENT_DATE (Africa/Accra): ${currentDate}\n\nPlease extract structured items from the attached image.` },
+          { type: 'image_url', image_url: { url: `data:${mimeType};base64,${base64Image}` } }
+        ]
+      });
+    } else {
+      throw new Error(`Unsupported capture type: ${capture.type}`);
+    }
 
     const completion = await client.chat.completions.parse({
       model: 'gpt-4o-mini',
-      messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
-        { role: 'user', content: userPrompt },
-      ],
+      messages,
       response_format: zodResponseFormat(ExtractionResponseSchema, 'extraction_response'),
       temperature: 0.1, // Low temp for more deterministic extraction
     });

@@ -12,6 +12,7 @@ import type { Construct } from 'constructs';
 
 import * as sqs from 'aws-cdk-lib/aws-sqs';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
+import * as s3 from 'aws-cdk-lib/aws-s3';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const HANDLERS_DIR = path.join(__dirname, '..', '..', 'services', 'api', 'src', 'handlers');
@@ -19,6 +20,7 @@ const HANDLERS_DIR = path.join(__dirname, '..', '..', 'services', 'api', 'src', 
 export interface ApiStackProps extends cdk.StackProps {
   ingestQueue: sqs.IQueue;
   table: dynamodb.ITable;
+  bucket: s3.IBucket;
 }
 
 export class ApiStack extends cdk.Stack {
@@ -121,6 +123,7 @@ export class ApiStack extends cdk.Stack {
       environment: {
         TABLE_NAME: props.table.tableName,
         INGEST_QUEUE_URL: props.ingestQueue.queueUrl,
+        BUCKET_NAME: props.bucket.bucketName,
       },
       bundling: {
         target: 'node22',
@@ -135,6 +138,25 @@ export class ApiStack extends cdk.Stack {
       path: '/captures',
       methods: [apigwv2.HttpMethod.POST],
       integration: new apigwv2int.HttpLambdaIntegration('CreateCaptureIntegration', createCaptureFn),
+      authorizer: jwtAuthorizer,
+    });
+
+    const presignCaptureFn = new NodejsFunction(this, 'PresignCaptureFn', {
+      runtime: lambda.Runtime.NODEJS_22_X,
+      architecture: lambda.Architecture.ARM_64,
+      entry: path.join(HANDLERS_DIR, 'presignCapture.ts'),
+      handler: 'handler',
+      timeout: cdk.Duration.seconds(10),
+      environment: {
+        BUCKET_NAME: props.bucket.bucketName,
+      },
+    });
+    props.bucket.grantWrite(presignCaptureFn);
+
+    this.httpApi.addRoutes({
+      path: '/captures/presign',
+      methods: [apigwv2.HttpMethod.GET],
+      integration: new apigwv2int.HttpLambdaIntegration('PresignCaptureIntegration', presignCaptureFn),
       authorizer: jwtAuthorizer,
     });
 

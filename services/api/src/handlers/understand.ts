@@ -34,9 +34,8 @@ export const handler = async (event: SQSEvent): Promise<void> => {
         continue;
       }
 
-      if (!capture.rawText) {
-        // We only support text captures in Milestone 3
-        throw new Error('Capture rawText is empty');
+      if (!capture.rawText && !capture.s3Key) {
+        throw new Error('Capture must have either rawText or s3Key');
       }
 
       // Update status to UNDERSTANDING
@@ -46,7 +45,7 @@ export const handler = async (event: SQSEvent): Promise<void> => {
       const currentDateString = new Date().toLocaleDateString('en-CA', { timeZone: 'Africa/Accra' });
 
       // Run extraction
-      const extracted = await OpenAIProvider.extractItems(capture.rawText, currentDateString);
+      const extracted = await OpenAIProvider.extractItems(capture, currentDateString);
 
       // Map to full Item schema
       const now = new Date().toISOString();

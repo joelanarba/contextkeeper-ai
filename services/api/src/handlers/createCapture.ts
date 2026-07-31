@@ -1,11 +1,14 @@
 import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
-import { CreateTextCaptureInput, ValidationError } from '@contextkeeper/core';
+import { CreateTextCaptureInput, CreateMediaCaptureInput, ValidationError } from '@contextkeeper/core';
 import { withAuth } from '../middleware/withAuth.js';
 import { withErrors } from '../middleware/withErrors.js';
 import { repo } from '../db/repo.js';
+import { z } from 'zod';
 
 const sqs = new SQSClient({});
 const QUEUE_URL = process.env.INGEST_QUEUE_URL;
+
+const InputSchema = z.union([CreateTextCaptureInput, CreateMediaCaptureInput]);
 
 export const handler = withErrors(async (event) => {
   const userId = withAuth(event);
@@ -26,16 +29,21 @@ export const handler = withErrors(async (event) => {
   }
 
   // Parse input against Zod schema
-  const parseResult = CreateTextCaptureInput.safeParse(parsed);
+  const parseResult = InputSchema.safeParse(parsed);
   if (!parseResult.success) {
     throw new ValidationError(`Invalid input: ${parseResult.error.message}`);
   }
 
-  const { text } = parseResult.data;
+  const data = parseResult.data;
   const nowIso = new Date().toISOString();
+  let captureId: string;
 
   // 1. Write to DynamoDB as UPLOADED
-  const captureId = await repo.createTextCapture(userId, text, nowIso);
+  if (data.type === 'TEXT') {
+    captureId = await repo.createTextCapture(userId, data.text, nowIso);
+  } else {
+    captureId = await repo.createMediaCapture(userId, data.type, data.s3Key, nowIso);
+  }
 
   // 2. Put message on SQS for async extraction
   await sqs.send(

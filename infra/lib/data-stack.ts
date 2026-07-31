@@ -63,6 +63,14 @@ export class DataStack extends cdk.Stack {
           ],
         },
       ],
+      cors: [
+        {
+          allowedMethods: [s3.HttpMethods.PUT, s3.HttpMethods.GET],
+          allowedOrigins: ['*'], // In production, restrict to actual web domain
+          allowedHeaders: ['*'],
+          maxAge: 3000,
+        },
+      ],
       removalPolicy: cdk.RemovalPolicy.RETAIN,
     });
 

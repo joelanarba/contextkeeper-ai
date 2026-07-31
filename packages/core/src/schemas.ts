@@ -82,6 +82,11 @@ export const CreateTextCaptureInput = z.object({
   text: z.string().min(1).max(50_000),
 });
 
+export const CreateMediaCaptureInput = z.object({
+  type: z.enum(['IMAGE', 'PDF', 'AUDIO']),
+  s3Key: z.string().min(1).max(1024),
+});
+
 export const RecallInput = z.object({
   question: z.string().min(1).max(2_000),
 });
