@@ -29,7 +29,7 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body>
-        <Authenticator hideSignUp={true}>
+        <Authenticator>
           {({ signOut }) => (
             <div style={layoutStyles.container}>
               <nav style={layoutStyles.sidebar} className="glass-panel">
