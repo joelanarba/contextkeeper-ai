@@ -1,5 +1,10 @@
 import { fetchAuthSession } from 'aws-amplify/auth';
-import type { Capture, Item, RecallInput, RecallResponse } from '@contextkeeper/core';
+import type { Capture, Item, RecallInput } from '@contextkeeper/core';
+
+export interface RecallResponse {
+  answer: string;
+  relatedItems?: Item[];
+}
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
