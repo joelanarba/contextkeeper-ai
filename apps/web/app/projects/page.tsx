@@ -34,11 +34,11 @@ export default function ProjectsPage() {
   }, {} as Record<string, Item[]>);
 
   return (
-    <div className="flex-1 p-8 overflow-y-auto">
+    <div className="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto">
       <div className="max-w-5xl mx-auto">
-        <header className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight">Projects</h1>
-          <p className="text-muted-foreground mt-1">Items organized by project.</p>
+        <header className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Projects</h1>
+          <p className="text-sm sm:text-base text-muted-foreground mt-1">Items organized by project.</p>
         </header>
 
         {loading ? (
@@ -50,18 +50,18 @@ export default function ProjectsPage() {
             icon={Folder}
             title="No projects yet"
             description="When you capture items, we'll automatically group them by project."
-            className="py-24 border border-dashed border-border rounded-2xl"
+            className="py-16 sm:py-24 border border-dashed border-border rounded-2xl"
           />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             {Object.entries(projects).map(([project, projectItems]) => (
-              <div key={project} className="bg-card border border-border rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
-                <div className="flex items-center justify-between mb-4 pb-4 border-b border-zinc-100">
-                  <h2 className="text-lg font-semibold flex items-center gap-2">
-                    <Folder className="w-5 h-5 text-zinc-400" />
-                    {project}
+              <div key={project} className="bg-card border border-border rounded-xl p-4 sm:p-5 shadow-sm hover:shadow-md transition-shadow">
+                <div className="flex items-center justify-between mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-zinc-100">
+                  <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2 truncate">
+                    <Folder className="w-4 h-4 sm:w-5 sm:h-5 text-zinc-400 shrink-0" />
+                    <span className="truncate">{project}</span>
                   </h2>
-                  <span className="text-xs font-medium bg-zinc-100 text-zinc-600 px-2 py-1 rounded-full">
+                  <span className="text-xs font-medium bg-zinc-100 text-zinc-600 px-2 py-1 rounded-full shrink-0">
                     {projectItems.length} items
                   </span>
                 </div>

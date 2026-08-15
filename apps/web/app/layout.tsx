@@ -14,15 +14,15 @@ export default function RootLayout({
     <html lang="en" className="antialiased">
       <head>
         <title>ContextKeeper</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
       </head>
       <body className="min-h-screen bg-background text-foreground">
         <AuthProvider>
-          <div className="flex min-h-screen">
+          <div className="flex flex-col md:flex-row min-h-screen">
             <Sidebar />
-            <div className="flex-1 ml-64 flex flex-col min-h-screen">
+            <main className="flex-1 md:ml-64 flex flex-col min-h-screen min-w-0 w-full overflow-x-hidden">
               {children}
-            </div>
+            </main>
           </div>
           <Toaster />
         </AuthProvider>

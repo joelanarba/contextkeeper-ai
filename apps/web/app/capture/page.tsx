@@ -355,7 +355,7 @@ export default function CapturePage() {
   // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
-    <div className="flex-1 flex flex-col p-8">
+    <div className="flex-1 flex flex-col p-4 sm:p-6 md:p-8">
       {/* Global CSS for waveform animation */}
       <style>{`
         @keyframes waveBar {
@@ -365,14 +365,14 @@ export default function CapturePage() {
       `}</style>
 
       <div className="max-w-3xl w-full mx-auto flex-1 flex flex-col">
-        <header className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight">Capture</h1>
-          <p className="text-muted-foreground mt-2">
+        <header className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Capture</h1>
+          <p className="text-sm sm:text-base text-muted-foreground mt-1 sm:mt-2">
             Dump your thoughts, meeting notes, or ideas here. We'll organize them automatically.
           </p>
         </header>
 
-        <div className="bg-card border border-border rounded-2xl shadow-sm overflow-hidden flex-1 flex flex-col max-h-[700px]">
+        <div className="bg-card border border-border rounded-2xl shadow-sm overflow-hidden flex-1 flex flex-col min-h-[480px] max-h-[700px]">
           {/* Tabs */}
           <div className="flex border-b border-border">
             {(["text", "voice", "file"] as const).map((tab) => (
@@ -380,21 +380,21 @@ export default function CapturePage() {
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={cn(
-                  "flex-1 py-4 text-sm font-medium flex items-center justify-center gap-2 transition-colors",
+                  "flex-1 py-3 sm:py-4 px-2 sm:px-4 text-xs sm:text-sm font-medium flex items-center justify-center gap-1.5 sm:gap-2 transition-colors",
                   activeTab === tab
                     ? "text-zinc-900 bg-zinc-50 border-b-2 border-zinc-900"
                     : "text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700"
                 )}
               >
-                {tab === "text" && <FileText className="w-4 h-4" />}
-                {tab === "voice" && <Mic className="w-4 h-4" />}
-                {tab === "file" && <ImageIcon className="w-4 h-4" />}
-                {tab === "text" ? "Text" : tab === "voice" ? "Voice" : "Image / PDF"}
+                {tab === "text" && <FileText className="w-4 h-4 shrink-0" />}
+                {tab === "voice" && <Mic className="w-4 h-4 shrink-0" />}
+                {tab === "file" && <ImageIcon className="w-4 h-4 shrink-0" />}
+                <span>{tab === "text" ? "Text" : tab === "voice" ? "Voice" : "Image / PDF"}</span>
               </button>
             ))}
           </div>
 
-          <div className="p-6 flex-1 flex flex-col">
+          <div className="p-4 sm:p-6 flex-1 flex flex-col">
             {/* ── Text Tab ── */}
             {activeTab === "text" && (
               <form onSubmit={handleTextSubmit} className="flex-1 flex flex-col">
@@ -402,7 +402,7 @@ export default function CapturePage() {
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   placeholder="Type anything here… e.g. 'Meeting with Sarah tomorrow at 2pm about the new design system. Need to follow up with John regarding the budget.'"
-                  className="flex-1 w-full resize-none border-none outline-none text-lg bg-transparent placeholder:text-zinc-400 focus:ring-0 p-0"
+                  className="flex-1 w-full resize-none border-none outline-none text-base sm:text-lg bg-transparent placeholder:text-zinc-400 focus:ring-0 p-0"
                   autoFocus
                   onKeyDown={(e) => {
                     if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
@@ -411,14 +411,14 @@ export default function CapturePage() {
                     }
                   }}
                 />
-                <div className="mt-4 flex items-center justify-between pt-4 border-t border-border">
-                  <p className="text-xs text-muted-foreground">
+                <div className="mt-4 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-0 pt-4 border-t border-border">
+                  <p className="text-xs text-muted-foreground hidden sm:block">
                     Press <kbd className="px-1.5 py-0.5 bg-muted rounded border font-mono">⌘ + Enter</kbd> to submit
                   </p>
                   <button
                     type="submit"
                     disabled={!text.trim() || isSubmitting}
-                    className="inline-flex items-center justify-center gap-2 bg-zinc-900 text-white hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed h-10 px-6 rounded-md font-medium transition-colors"
+                    className="inline-flex items-center justify-center gap-2 bg-zinc-900 text-white hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed h-10 px-6 rounded-md font-medium transition-colors w-full sm:w-auto"
                   >
                     {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                     Capture
@@ -628,11 +628,11 @@ export default function CapturePage() {
                     </p>
 
                     {/* Action row */}
-                    <div className="flex items-center justify-between mt-auto pt-4 border-t border-border">
+                    <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-0 mt-auto pt-4 border-t border-border">
                       <button
                         onClick={discardRecording}
                         disabled={audioUploadState === "uploading" || audioUploadState === "processing"}
-                        className="flex items-center gap-1.5 text-sm text-zinc-500 hover:text-zinc-700 disabled:opacity-40 transition-colors"
+                        className="flex items-center justify-center gap-1.5 text-sm text-zinc-500 hover:text-zinc-700 disabled:opacity-40 transition-colors py-2 sm:py-0"
                       >
                         <RotateCcw className="w-3.5 h-3.5" />
                         Record again
@@ -640,7 +640,7 @@ export default function CapturePage() {
                       <button
                         onClick={uploadRecording}
                         disabled={audioUploadState === "uploading" || audioUploadState === "processing"}
-                        className="inline-flex items-center justify-center gap-2 bg-zinc-900 text-white hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed h-10 px-6 rounded-md font-medium transition-colors"
+                        className="inline-flex items-center justify-center gap-2 bg-zinc-900 text-white hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed h-10 px-6 rounded-md font-medium transition-colors w-full sm:w-auto"
                       >
                         {audioUploadState === "uploading" || audioUploadState === "processing" ? (
                           <>
@@ -760,14 +760,14 @@ export default function CapturePage() {
                       </div>
                     )}
 
-                    <div className="flex items-center justify-between pt-2 border-t border-border">
-                      <button onClick={clearFile} disabled={uploadState === "uploading" || uploadState === "processing"} className="text-sm text-zinc-500 hover:text-zinc-700 disabled:opacity-50 transition-colors">
+                    <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-0 pt-3 border-t border-border">
+                      <button onClick={clearFile} disabled={uploadState === "uploading" || uploadState === "processing"} className="text-sm text-zinc-500 hover:text-zinc-700 disabled:opacity-50 transition-colors py-2 sm:py-0 text-center">
                         Choose different file
                       </button>
                       <button
                         onClick={handleFileUpload}
                         disabled={uploadState === "uploading" || uploadState === "processing"}
-                        className="inline-flex items-center justify-center gap-2 bg-zinc-900 text-white hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed h-10 px-6 rounded-md font-medium transition-colors"
+                        className="inline-flex items-center justify-center gap-2 bg-zinc-900 text-white hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed h-10 px-6 rounded-md font-medium transition-colors w-full sm:w-auto"
                       >
                         {uploadState === "uploading" || uploadState === "processing" ? (
                           <><Loader2 className="w-4 h-4 animate-spin" />{uploadState === "uploading" ? "Uploading…" : "Processing…"}</>

@@ -92,7 +92,7 @@ export class ApiStack extends cdk.Stack {
     this.httpApi = new apigwv2.HttpApi(this, 'HttpApi', {
       apiName: 'ContextKeeperAPI',
       corsPreflight: {
-        allowOrigins: ['http://localhost:3000'],
+        allowOrigins: ['http://localhost:3000', 'https://contextkeeper-ai-web.vercel.app'],
         allowMethods: [apigwv2.CorsHttpMethod.ANY],
         allowHeaders: ['Authorization', 'Content-Type'],
       },

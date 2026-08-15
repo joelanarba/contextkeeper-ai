@@ -34,13 +34,13 @@ export function CommandPalette({ open, setOpen }: Props) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-start justify-center pt-[15vh]">
+    <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-start justify-center pt-14 sm:pt-[15vh] px-3 sm:px-4">
       <div 
         className="fixed inset-0 z-40" 
         onClick={() => setOpen(false)}
       />
       <Command 
-        className="relative z-50 w-full max-w-2xl bg-card border border-border rounded-xl shadow-2xl overflow-hidden"
+        className="relative z-50 w-full max-w-xl bg-card border border-border rounded-xl shadow-2xl overflow-hidden"
         onKeyDown={(e) => {
           if (e.key === "Escape") setOpen(false);
         }}

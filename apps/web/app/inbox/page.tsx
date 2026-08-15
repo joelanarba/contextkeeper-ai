@@ -26,14 +26,14 @@ export default function InboxPage() {
   }, []);
 
   return (
-    <div className="flex-1 p-8 overflow-y-auto">
+    <div className="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto">
       <div className="max-w-4xl mx-auto">
-        <header className="mb-8 flex items-center justify-between">
+        <header className="mb-6 sm:mb-8 flex items-start sm:items-center justify-between gap-3">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Inbox</h1>
-            <p className="text-muted-foreground mt-1">Review and process your captured items.</p>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Inbox</h1>
+            <p className="text-sm sm:text-base text-muted-foreground mt-1">Review and process your captured items.</p>
           </div>
-          <div className="bg-zinc-100 text-zinc-600 px-3 py-1 rounded-full text-sm font-medium">
+          <div className="bg-zinc-100 text-zinc-600 px-3 py-1 rounded-full text-xs sm:text-sm font-medium shrink-0">
             {items.length} items
           </div>
         </header>

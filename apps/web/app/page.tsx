@@ -39,14 +39,14 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="flex-1 p-8 overflow-y-auto">
-      <div className="max-w-5xl mx-auto space-y-12">
+    <div className="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto">
+      <div className="max-w-5xl mx-auto space-y-8 sm:space-y-12">
         <header>
-          <h1 className="text-3xl font-bold tracking-tight mb-2">Good morning</h1>
-          <p className="text-muted-foreground">Here is what's happening today.</p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mb-1 sm:mb-2">Good morning</h1>
+          <p className="text-sm sm:text-base text-muted-foreground">Here is what's happening today.</p>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
           <section className="space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold flex items-center gap-2">
