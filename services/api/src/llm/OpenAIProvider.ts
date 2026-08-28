@@ -3,7 +3,7 @@ import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 import { OpenAI } from 'openai';
 import { zodResponseFormat } from 'openai/helpers/zod';
 import { ExtractionResponseSchema, type LlmProvider, type ExtractionItem, getExtractionUserPrompt, SYSTEM_PROMPT } from '@contextkeeper/core';
-import type { Capture } from '@contextkeeper/core';
+import type { Capture, Item } from '@contextkeeper/core';
 
 // We will load pdf-parse dynamically to avoid ESM/CJS bundling issues
 let pdfParse: any = null;
@@ -144,15 +144,15 @@ ${contextString}`;
     return completion.choices[0]?.message?.content || 'Sorry, I was unable to generate an answer.';
   },
 
-  async synthesizeDigest(items: ExtractionItem[], currentDate: string): Promise<string> {
+  async synthesizeDigest(items: Item[], currentDate: string): Promise<string> {
     const client = await getClient();
 
     const systemPrompt = `You are ContextKeeper, a personal memory assistant.
-Your job is to write a weekly digest email to the user summarizing their open tasks, follow-ups, and ideas.
-The output MUST be formatted in clean HTML so it renders beautifully in an email client.
+Your job is to write a weekly analytical retrospective email to the user summarizing their week.
+Analyze the items they captured, extract overarching themes, patterns, or bottlenecks, and provide 2-3 constructive recommendations for the upcoming week.
+The output MUST be formatted in elegant HTML so it renders beautifully in an email client.
 Do NOT include markdown block wrappers like \`\`\`html. Output raw HTML only.
-Use an elegant, professional, and friendly tone. Group by category (e.g. Tasks, Follow-ups, Ideas).
-Highlight any HIGH priority items or overdue items if applicable based on the CURRENT_DATE.`;
+Tone: analytical, encouraging, and professional.`;
 
     const userContent = `CURRENT_DATE (Africa/Accra): ${currentDate}\n\nItems to summarize:\n${JSON.stringify(items, null, 2)}`;
 
@@ -168,5 +168,33 @@ Highlight any HIGH priority items or overdue items if applicable based on the CU
     const content = completion.choices[0]?.message?.content || '';
     // Strip markdown formatting if the model still outputs it
     return content.replace(/^```html\s*/i, '').replace(/```\s*$/i, '').trim();
+  },
+
+  async decomposeTask(task: Item): Promise<{ title: string }[]> {
+    const client = await getClient();
+
+    const systemPrompt = `You are an AI productivity coach.
+The user has a task that has been stalled for several days. Break it down into 2 to 3 very small, actionable micro-tasks to help them build momentum.
+Return a JSON object with a "subtasks" array containing objects with a "title" string.`;
+
+    const completion = await client.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: `Task: ${task.title}` }
+      ],
+      response_format: { type: 'json_object' },
+      temperature: 0.3,
+    });
+
+    const content = completion.choices[0]?.message?.content;
+    if (!content) return [];
+    
+    try {
+      const parsed = JSON.parse(content);
+      return parsed.subtasks || [];
+    } catch (e) {
+      return [];
+    }
   }
 };

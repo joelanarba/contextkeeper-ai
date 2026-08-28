@@ -15,7 +15,7 @@ export const CaptureType = z.enum(['TEXT', 'IMAGE', 'PDF', 'AUDIO']);
 
 export const ItemType = z.enum(['TASK', 'IDEA', 'NOTE', 'FOLLOW_UP', 'PROJECT']);
 
-export const ItemStatus = z.enum(['OPEN', 'COMPLETE']);
+export const ItemStatus = z.enum(['OPEN', 'COMPLETE', 'NEEDS_REVIEW']);
 
 export const Priority = z.enum(['HIGH', 'MEDIUM', 'LOW']);
 
@@ -33,6 +33,8 @@ export const CaptureSchema = z.object({
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
   schemaVersion: z.number().int().positive(),
+  externalJobId: z.string().optional(),
+  taskToken: z.string().optional(),
 });
 
 export const ItemSchema = z.object({
@@ -54,6 +56,9 @@ export const ItemSchema = z.object({
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
   schemaVersion: z.number().int().positive(),
+  confidence: z.number().min(0).max(1).optional(),
+  parentItemId: z.string().uuid().optional(),
+  hasSubtasks: z.boolean().default(false).optional(),
 });
 
 // --- Extraction response envelope (parsed from LLM output) ---
@@ -69,6 +74,7 @@ export const ExtractionItemSchema = z.object({
     .optional(),
   project: z.string().nullable().optional(),
   priority: Priority,
+  confidence: z.number().min(0).max(1),
 });
 
 export const ExtractionResponseSchema = z.object({
@@ -102,4 +108,6 @@ export const UpdateItemInput = z.object({
   priority: Priority.optional(),
   person: z.string().nullable().optional(),
   project: z.string().nullable().optional(),
+  parentItemId: z.string().uuid().optional(),
+  hasSubtasks: z.boolean().optional(),
 });

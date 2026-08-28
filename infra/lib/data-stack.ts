@@ -45,6 +45,13 @@ export class DataStack extends cdk.Stack {
       projectionType: dynamodb.ProjectionType.ALL,
     });
 
+    // GSI3: lookup capture by externalJobId
+    this.table.addGlobalSecondaryIndex({
+      indexName: 'GSI3',
+      partitionKey: { name: 'externalJobId', type: dynamodb.AttributeType.STRING },
+      projectionType: dynamodb.ProjectionType.ALL,
+    });
+
     // --- S3 bucket for raw captures ---
     // Block Public Access on all 4 settings. SSE-S3 encryption.
     // Presigned URLs only; no public objects ever.

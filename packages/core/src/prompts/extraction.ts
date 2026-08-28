@@ -7,7 +7,8 @@ RULES:
 3. If no due date is implied, omit it or return null.
 4. If a person is mentioned as responsible or as a counterpart, extract their name.
 5. Identify the priority based on urgency words (HIGH, MEDIUM, LOW). Default to MEDIUM.
-6. Return a JSON object with a single "items" array.`;
+6. Provide a confidence score (0.0 to 1.0) for each item. If the text is ambiguous, garbled, or you are unsure about any field, assign a lower confidence. Only assign > 0.8 if you are certain.
+7. Return a JSON object with a single "items" array.`;
 
 export function getExtractionUserPrompt(rawText: string, currentDate: string): string {
   return `CURRENT_DATE (Africa/Accra): ${currentDate}

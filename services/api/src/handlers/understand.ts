@@ -49,22 +49,27 @@ export const handler = async (event: SQSEvent): Promise<void> => {
 
       // Map to full Item schema
       const now = new Date().toISOString();
-      const itemsToSave: Item[] = extracted.map((ext) => ({
-        id: crypto.randomUUID(),
-        userId,
-        type: ext.type,
-        title: ext.title,
-        person: ext.person || undefined,
-        personDisplay: ext.person || undefined,
-        dueDate: ext.dueDate || undefined,
-        project: ext.project || undefined,
-        priority: ext.priority,
-        status: 'OPEN',
-        sourceCaptureId: captureId,
-        createdAt: now,
-        updatedAt: now,
-        schemaVersion: 1,
-      }));
+      const itemsToSave: Item[] = extracted.map((ext) => {
+        const status = (ext.confidence !== undefined && ext.confidence < 0.7) ? 'NEEDS_REVIEW' : 'OPEN';
+        
+        return {
+          id: crypto.randomUUID(),
+          userId,
+          type: ext.type,
+          title: ext.title,
+          person: ext.person || undefined,
+          personDisplay: ext.person || undefined,
+          dueDate: ext.dueDate || undefined,
+          project: ext.project || undefined,
+          priority: ext.priority,
+          status: status,
+          confidence: ext.confidence,
+          sourceCaptureId: captureId,
+          createdAt: now,
+          updatedAt: now,
+          schemaVersion: 1,
+        };
+      });
 
       // Save to DynamoDB transactionally and mark capture READY
       await repo.saveExtractedItems(userId, createdAt, captureId, itemsToSave);

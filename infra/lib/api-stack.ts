@@ -21,6 +21,8 @@ export interface ApiStackProps extends cdk.StackProps {
   ingestQueue: sqs.IQueue;
   table: dynamodb.ITable;
   bucket: s3.IBucket;
+  digestFn: lambda.Function;
+  busterFn: lambda.Function;
 }
 
 export class ApiStack extends cdk.Stack {
@@ -66,6 +68,10 @@ export class ApiStack extends cdk.Stack {
         logoutUrls: ['http://localhost:3000/'],
       },
     });
+    
+    // Add UserPoolId to agents
+    props.digestFn.addEnvironment('USER_POOL_ID', this.userPool.userPoolId);
+    props.busterFn.addEnvironment('USER_POOL_ID', this.userPool.userPoolId);
 
     // Hosted UI domain — account ID suffix guarantees global uniqueness.
     this.userPool.addDomain('CognitoDomain', {
@@ -172,6 +178,37 @@ export class ApiStack extends cdk.Stack {
     new cdk.CfnOutput(this, 'ApiUrl', { value: this.httpApi.apiEndpoint });
     new cdk.CfnOutput(this, 'UserPoolId', { value: this.userPool.userPoolId });
     new cdk.CfnOutput(this, 'UserPoolClientId', { value: userPoolClient.userPoolClientId });
+    // --- Capture Queries ---
+    const listCapturesFn = new NodejsFunction(this, 'ListCapturesFn', {
+      runtime: lambda.Runtime.NODEJS_22_X,
+      architecture: lambda.Architecture.ARM_64,
+      entry: path.join(HANDLERS_DIR, 'listCaptures.ts'),
+      handler: 'handler',
+      environment: { TABLE_NAME: props.table.tableName },
+    });
+    props.table.grantReadData(listCapturesFn);
+    this.httpApi.addRoutes({
+      path: '/captures',
+      methods: [apigwv2.HttpMethod.GET],
+      integration: new apigwv2int.HttpLambdaIntegration('ListCapturesIntegration', listCapturesFn),
+      authorizer: jwtAuthorizer,
+    });
+
+    const getCaptureFn = new NodejsFunction(this, 'GetCaptureFn', {
+      runtime: lambda.Runtime.NODEJS_22_X,
+      architecture: lambda.Architecture.ARM_64,
+      entry: path.join(HANDLERS_DIR, 'getCapture.ts'),
+      handler: 'handler',
+      environment: { TABLE_NAME: props.table.tableName },
+    });
+    props.table.grantReadData(getCaptureFn);
+    this.httpApi.addRoutes({
+      path: '/captures/{id}',
+      methods: [apigwv2.HttpMethod.GET],
+      integration: new apigwv2int.HttpLambdaIntegration('GetCaptureIntegration', getCaptureFn),
+      authorizer: jwtAuthorizer,
+    });
+
     // List Items Lambda
     const listItemsFn = new NodejsFunction(this, 'ListItemsFn', {
       runtime: lambda.Runtime.NODEJS_22_X,
@@ -189,6 +226,38 @@ export class ApiStack extends cdk.Stack {
       path: '/items',
       methods: [apigwv2.HttpMethod.GET],
       integration: listItemsIntegration,
+      authorizer: jwtAuthorizer,
+    });
+
+    // Update Item Lambda
+    const updateItemFn = new NodejsFunction(this, 'UpdateItemFn', {
+      runtime: lambda.Runtime.NODEJS_22_X,
+      architecture: lambda.Architecture.ARM_64,
+      entry: path.join(HANDLERS_DIR, 'updateItem.ts'),
+      handler: 'handler',
+      environment: { TABLE_NAME: props.table.tableName },
+    });
+    props.table.grantReadWriteData(updateItemFn);
+    this.httpApi.addRoutes({
+      path: '/items/{id}',
+      methods: [apigwv2.HttpMethod.PATCH],
+      integration: new apigwv2int.HttpLambdaIntegration('UpdateItemIntegration', updateItemFn),
+      authorizer: jwtAuthorizer,
+    });
+
+    // Delete Item Lambda
+    const deleteItemFn = new NodejsFunction(this, 'DeleteItemFn', {
+      runtime: lambda.Runtime.NODEJS_22_X,
+      architecture: lambda.Architecture.ARM_64,
+      entry: path.join(HANDLERS_DIR, 'deleteItem.ts'),
+      handler: 'handler',
+      environment: { TABLE_NAME: props.table.tableName },
+    });
+    props.table.grantReadWriteData(deleteItemFn);
+    this.httpApi.addRoutes({
+      path: '/items/{id}',
+      methods: [apigwv2.HttpMethod.DELETE],
+      integration: new apigwv2int.HttpLambdaIntegration('DeleteItemIntegration', deleteItemFn),
       authorizer: jwtAuthorizer,
     });
 

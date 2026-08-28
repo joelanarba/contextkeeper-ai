@@ -25,4 +25,6 @@ new ApiStack(app, 'ContextKeeper-ApiStack', {
   table: dataStack.table,
   ingestQueue: pipelineStack.ingestQueue,
   bucket: dataStack.bucket,
+  digestFn: pipelineStack.digestFn,
+  busterFn: pipelineStack.busterFn,
 });

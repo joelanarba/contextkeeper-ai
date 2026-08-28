@@ -75,7 +75,18 @@ export default function TasksPage() {
               <section>
                 <h2 className="text-xs sm:text-sm font-semibold text-zinc-500 uppercase tracking-wider mb-3">To Do ({todoTasks.length})</h2>
                 <div className="grid grid-cols-1 gap-3">
-                  {todoTasks.map(item => <ItemCard key={item.id} item={item} />)}
+                  {todoTasks.filter(t => !t.parentItemId).map(item => (
+                    <div key={item.id} className="space-y-2">
+                      <ItemCard item={item} />
+                      {item.hasSubtasks && (
+                        <div className="ml-6 sm:ml-8 mt-2 space-y-2 border-l-2 border-zinc-100 pl-4">
+                          {todoTasks.filter(st => st.parentItemId === item.id).map(st => (
+                            <ItemCard key={st.id} item={st} />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
                 </div>
               </section>
             )}
@@ -100,7 +111,18 @@ export default function TasksPage() {
                 {todoTasks.length === 0 ? (
                   <p className="text-xs text-muted-foreground text-center py-4">No tasks to do</p>
                 ) : (
-                  todoTasks.map(item => <ItemCard key={item.id} item={item} />)
+                  todoTasks.filter(t => !t.parentItemId).map(item => (
+                    <div key={item.id} className="space-y-2">
+                      <ItemCard item={item} />
+                      {item.hasSubtasks && (
+                        <div className="ml-4 space-y-2 border-l-2 border-zinc-100 pl-3">
+                          {todoTasks.filter(st => st.parentItemId === item.id).map(st => (
+                            <ItemCard key={st.id} item={st} />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))
                 )}
               </div>
             </div>

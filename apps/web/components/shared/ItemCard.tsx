@@ -49,6 +49,13 @@ export function ItemCard({ item, onClick }: ItemCardProps) {
             <span className="font-medium text-zinc-700 truncate max-w-[120px] sm:max-w-none">#{item.project}</span>
           </div>
         )}
+        {item.confidence !== undefined && (
+          <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded-md shrink-0 border ${item.confidence < 0.7 ? 'bg-orange-50 text-orange-700 border-orange-200' : 'bg-zinc-50 text-zinc-600 border-zinc-200'}`}>
+            <span className="font-medium truncate max-w-[120px] sm:max-w-none">
+              {Math.round(item.confidence * 100)}% Conf
+            </span>
+          </div>
+        )}
         <div className="ml-auto text-[10px] text-zinc-400 shrink-0">
           {formatDate(item.createdAt)}
         </div>

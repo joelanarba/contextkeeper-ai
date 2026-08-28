@@ -1,4 +1,4 @@
-import type { ExtractionItem, Capture } from '../types.js';
+import type { ExtractionItem, Capture, Item } from '../types.js';
 
 export interface LlmProvider {
   /**
@@ -21,5 +21,10 @@ export interface LlmProvider {
   /**
    * Synthesize a weekly digest email from a list of open items.
    */
-  synthesizeDigest(items: ExtractionItem[], currentDate: string): Promise<string>;
+  synthesizeDigest(items: Item[], currentDate: string): Promise<string>;
+
+  /**
+   * Break down a complex stalled task into 2-3 actionable subtasks.
+   */
+  decomposeTask(task: Item): Promise<{ title: string }[]>;
 }

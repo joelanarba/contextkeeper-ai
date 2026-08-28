@@ -15,6 +15,9 @@ export default function RootLayout({
       <head>
         <title>ContextKeeper</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#18181b" />
+        <link rel="apple-touch-icon" href="/icon.svg" />
       </head>
       <body className="min-h-screen bg-background text-foreground">
         <AuthProvider>

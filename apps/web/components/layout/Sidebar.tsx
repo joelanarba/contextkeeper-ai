@@ -12,6 +12,7 @@ import {
   Users, 
   Settings, 
   PlusCircle,
+  AlertTriangle,
   LayoutDashboard,
   Menu,
   X,
@@ -28,6 +29,7 @@ const NAV_ITEMS = [
   { name: "Tasks", href: "/tasks", icon: CheckSquare },
   { name: "Projects", href: "/projects", icon: Folder },
   { name: "People", href: "/people", icon: Users },
+  { name: "Needs Review", href: "/review", icon: AlertTriangle },
 ];
 
 export function Sidebar() {

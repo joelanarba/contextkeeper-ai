@@ -1,9 +1,12 @@
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
+import { CognitoIdentityProviderClient, ListUsersCommand } from '@aws-sdk/client-cognito-identity-provider';
 import { repo } from '../db/repo.js';
 import { OpenAIProvider } from '../llm/OpenAIProvider.js';
 
 const ses = new SESClient({});
+const cognito = new CognitoIdentityProviderClient({});
 const SENDER_EMAIL = process.env.SENDER_EMAIL;
+const USER_POOL_ID = process.env.USER_POOL_ID;
 
 export const handler = async (event: any): Promise<void> => {
   console.log('Running weekly digest generation...', JSON.stringify(event));
@@ -11,10 +14,35 @@ export const handler = async (event: any): Promise<void> => {
   if (!SENDER_EMAIL) {
     throw new Error('SENDER_EMAIL environment variable is missing');
   }
+  if (!USER_POOL_ID) {
+    throw new Error('USER_POOL_ID environment variable is missing');
+  }
 
   try {
-    // For MVP, we use the mock user ID. In production, we'd query all active users.
-    const userId = 'test-user-123';
+    // For MVP, we get the first user from Cognito (single user app)
+    const usersRes = await cognito.send(new ListUsersCommand({
+      UserPoolId: USER_POOL_ID,
+      Limit: 1,
+    }));
+    
+    const users = usersRes.Users || [];
+    if (users.length === 0) {
+      console.log('No users found in Cognito. Skipping digest.');
+      return;
+    }
+
+    const user = users[0];
+    if (!user) return;
+
+    // The userId is the user's sub attribute, or username if sub is not found
+    const subAttr = user.Attributes?.find((a: any) => a.Name === 'sub');
+    const userId = subAttr ? subAttr.Value : user.Username;
+    
+    if (!userId) {
+       console.log('User has no sub or username. Skipping.');
+       return;
+    }
+
     const allItems = await repo.listItems(userId);
 
     // Filter to open items only to include in the digest
