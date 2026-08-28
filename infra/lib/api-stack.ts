@@ -21,8 +21,6 @@ export interface ApiStackProps extends cdk.StackProps {
   ingestQueue: sqs.IQueue;
   table: dynamodb.ITable;
   bucket: s3.IBucket;
-  digestFn: lambda.Function;
-  busterFn: lambda.Function;
 }
 
 export class ApiStack extends cdk.Stack {
@@ -68,11 +66,6 @@ export class ApiStack extends cdk.Stack {
         logoutUrls: ['http://localhost:3000/'],
       },
     });
-    
-    // Add UserPoolId to agents
-    props.digestFn.addEnvironment('USER_POOL_ID', this.userPool.userPoolId);
-    props.busterFn.addEnvironment('USER_POOL_ID', this.userPool.userPoolId);
-
     // Hosted UI domain — account ID suffix guarantees global uniqueness.
     this.userPool.addDomain('CognitoDomain', {
       cognitoDomain: {
@@ -295,6 +288,60 @@ export class ApiStack extends cdk.Stack {
       integration: new apigwv2int.HttpLambdaIntegration('RecallIntegration', recallFn),
       authorizer: jwtAuthorizer,
     });
+
+    // --- Background Agents ---
+    const ssmPolicy = new cdk.aws_iam.PolicyStatement({
+      actions: ['ssm:GetParameter'],
+      resources: [`arn:aws:ssm:${this.region}:${this.account}:parameter/contextkeeper/openai-api-key`],
+    });
+
+    const digestFn = new NodejsFunction(this, 'DigestFn', {
+      runtime: lambda.Runtime.NODEJS_22_X,
+      architecture: lambda.Architecture.ARM_64,
+      entry: path.join(HANDLERS_DIR, 'digest.ts'),
+      handler: 'handler',
+      memorySize: 1024,
+      timeout: cdk.Duration.seconds(60),
+      environment: {
+        TABLE_NAME: props.table.tableName,
+        SENDER_EMAIL: 'anarbajoel@gmail.com',
+        USER_POOL_ID: this.userPool.userPoolId,
+      },
+      bundling: { target: 'node22', sourceMap: true, format: 'esm' as OutputFormat },
+    });
+
+    props.table.grantReadData(digestFn);
+    digestFn.addToRolePolicy(new cdk.aws_iam.PolicyStatement({ actions: ['ses:SendEmail', 'ses:SendRawEmail'], resources: ['*'] }));
+    digestFn.addToRolePolicy(ssmPolicy);
+    digestFn.addToRolePolicy(new cdk.aws_iam.PolicyStatement({ actions: ['cognito-idp:ListUsers'], resources: ['*'] }));
+
+    const digestRule = new cdk.aws_events.Rule(this, 'WeeklyDigestRule', {
+      schedule: cdk.aws_events.Schedule.cron({ minute: '0', hour: '17', weekDay: 'SUN' }),
+    });
+    digestRule.addTarget(new cdk.aws_events_targets.LambdaFunction(digestFn));
+
+    const busterFn = new NodejsFunction(this, 'ProcrastinationBusterFn', {
+      runtime: lambda.Runtime.NODEJS_22_X,
+      architecture: lambda.Architecture.ARM_64,
+      entry: path.join(HANDLERS_DIR, 'procrastinationBuster.ts'),
+      handler: 'handler',
+      memorySize: 512,
+      timeout: cdk.Duration.seconds(120),
+      environment: {
+        TABLE_NAME: props.table.tableName,
+        USER_POOL_ID: this.userPool.userPoolId,
+      },
+      bundling: { target: 'node22', sourceMap: true, format: 'esm' as OutputFormat },
+    });
+
+    props.table.grantReadWriteData(busterFn);
+    busterFn.addToRolePolicy(ssmPolicy);
+    busterFn.addToRolePolicy(new cdk.aws_iam.PolicyStatement({ actions: ['cognito-idp:ListUsers'], resources: ['*'] }));
+
+    const busterRule = new cdk.aws_events.Rule(this, 'ProcrastinationBusterRule', {
+      schedule: cdk.aws_events.Schedule.cron({ minute: '0', hour: '2' }),
+    });
+    busterRule.addTarget(new cdk.aws_events_targets.LambdaFunction(busterFn));
   }
 }
 

@@ -24,8 +24,6 @@ export interface PipelineStackProps extends cdk.StackProps {
 
 export class PipelineStack extends cdk.Stack {
   public readonly ingestQueue: sqs.IQueue;
-  public readonly digestFn: NodejsFunction;
-
   constructor(scope: Construct, id: string, props: PipelineStackProps) {
     super(scope, id, props);
 
@@ -189,58 +187,5 @@ export class PipelineStack extends cdk.Stack {
     pipelineStateMachine.grantStartExecution(sqsToStepFn);
     sqsToStepFn.addEventSource(new SqsEventSource(this.ingestQueue, { batchSize: 1 }));
 
-    // --- 5. Weekly Digest Lambda ---
-    this.digestFn = new NodejsFunction(this, 'DigestFn', {
-      runtime: lambda.Runtime.NODEJS_22_X,
-      architecture: lambda.Architecture.ARM_64,
-      entry: path.join(HANDLERS_DIR, 'digest.ts'),
-      handler: 'handler',
-      memorySize: 1024,
-      timeout: cdk.Duration.seconds(60),
-      environment: {
-        TABLE_NAME: props.table.tableName,
-        SENDER_EMAIL: 'anarbajoel@gmail.com', // As specified by user
-      },
-      bundling: { target: 'node22', sourceMap: true, format: 'esm' as OutputFormat },
-    });
-
-    props.table.grantReadData(this.digestFn);
-    this.digestFn.addToRolePolicy(new iam.PolicyStatement({ actions: ['ses:SendEmail', 'ses:SendRawEmail'], resources: ['*'] }));
-    this.digestFn.addToRolePolicy(ssmPolicy);
-    this.digestFn.addToRolePolicy(new iam.PolicyStatement({ actions: ['cognito-idp:ListUsers'], resources: ['*'] }));
-
-    const rule = new events.Rule(this, 'WeeklyDigestRule', {
-      schedule: events.Schedule.cron({ minute: '0', hour: '17', weekDay: 'SUN' }),
-    });
-    rule.addTarget(new targets.LambdaFunction(this.digestFn));
-
-    // --- 6. Procrastination Buster Agent ---
-    const busterFn = new NodejsFunction(this, 'ProcrastinationBusterFn', {
-      runtime: lambda.Runtime.NODEJS_22_X,
-      architecture: lambda.Architecture.ARM_64,
-      entry: path.join(HANDLERS_DIR, 'procrastinationBuster.ts'),
-      handler: 'handler',
-      memorySize: 512,
-      timeout: cdk.Duration.seconds(120),
-      environment: {
-        TABLE_NAME: props.table.tableName,
-        // USER_POOL_ID will be set by ApiStack, just like digestFn
-      },
-      bundling: { target: 'node22', sourceMap: true, format: 'esm' as OutputFormat },
-    });
-
-    props.table.grantReadWriteData(busterFn);
-    busterFn.addToRolePolicy(ssmPolicy);
-    busterFn.addToRolePolicy(new iam.PolicyStatement({ actions: ['cognito-idp:ListUsers'], resources: ['*'] }));
-
-    // Run nightly at 2 AM UTC
-    const busterRule = new events.Rule(this, 'ProcrastinationBusterRule', {
-      schedule: events.Schedule.cron({ minute: '0', hour: '2' }),
-    });
-    busterRule.addTarget(new targets.LambdaFunction(busterFn));
-    
-    // We need to expose busterFn so ApiStack can inject USER_POOL_ID
-    this.busterFn = busterFn;
   }
-  public readonly busterFn: NodejsFunction;
 }
